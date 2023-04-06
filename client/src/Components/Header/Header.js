@@ -15,9 +15,9 @@ export const Header = () => {
                     <div id="user">
                         <span style={{margin: '60px'}}>Hi, {userEmail}</span>
                         <Link to="/forum">Forum</Link> 
-                        <Link to="create-game">Profile</Link>
-                        <Link to="create-game">Settings</Link>
-                        <Link to="logout">Logout</Link>
+                        <Link to="/profile">Profile</Link>
+                        <Link to="/settings">Settings</Link>
+                        <Link to="/logout">Logout</Link>
                     </div>
                 )}
 
