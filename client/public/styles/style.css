@@ -1,0 +1,229 @@
+body {
+    background-image: url('https://cdn.pixabay.com/photo/2023/03/08/17/01/darling-7838296_960_720.jpg');
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    overflow: hidden;
+
+}
+
+
+header,
+footer {
+    background-color: #161618;
+    width: 100%;
+    overflow: hidden;
+    color: whitesmoke;
+}
+
+
+header {
+    position: relative;
+    padding: 10px;
+}
+
+
+
+header nav {
+    font-size: 22px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+}
+
+header nav>* {
+    float: left;
+}
+
+footer {
+    padding: 0.5em;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    margin-top: auto;
+}
+
+nav a {
+    margin: 0 0.5em;
+}
+
+nav a:hover {
+    cursor: pointer;
+    color: rgb(82, 133, 139);
+    font-weight: bolder;
+}
+
+
+#user,
+#guest {
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: inherit;
+    line-height: 1.3;
+}
+
+h1,
+h2,
+h4,
+h5,
+h6 {
+    padding: 0.2em 1rem;
+}
+
+p,
+div {
+    margin: 0 1em 0.5em 1em;
+}
+
+ol,
+ul {
+    margin: 0em 1rem;
+}
+
+li {
+    list-style-position: inside;
+}
+
+button {
+    font-weight: bold;
+    padding: 0.2em;
+    margin: 0.2em;
+    border: 1px solid white;
+    border-radius: 0.3em;
+    background-color: transparent;
+}
+
+a {
+    margin: 0.0em;
+    text-decoration: none;
+    font-weight: bold;
+    color: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#login-page, #register-page {
+    border-radius: 6px;
+    position: relative;
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    padding: 40px;
+    box-sizing: border-box;
+    background: #161618;
+}
+
+
+
+
+
+.container>h1 {
+    margin-top: 15px;
+    font-weight: 900;
+    font-size: 2.7rem;
+    text-align: center;
+    color: white;
+    letter-spacing: 1px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    margin-bottom: 17px;
+}
+
+
+.inputDiv{
+    text-align: center;
+}
+
+input {
+    background: whitesmoke;
+    padding: 10px;
+    margin-top: 10px;
+    font-size: 24px;
+    border-radius: 6px;
+    display: inline;
+    border: none;
+    outline: none;
+    box-sizing: border-box;
+}
+
+
+
+
+
+
+.btn.submit {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    padding-left: 16px;
+    padding-right: 16px;
+    background: #62626C;
+    border-radius: 10px;
+    color: whitesmoke;
+    font-size: 28px;
+    cursor: pointer;
+    font-weight: 900;
+    transition: 0.5s;
+}
+
+.btn.submit:hover {
+    color: white;
+    background-color: #84848e;
+}
+
+
+.field>span {
+    position: absolute;
+    font-size: 18px;
+    bottom: 17px;
+    right: 8px;
+    text-decoration: none;
+    color: black;
+    background: #62626c;
+    border-radius: 10px;
+    padding: 5px;
+}
