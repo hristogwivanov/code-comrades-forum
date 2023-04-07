@@ -1,4 +1,4 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { AuthServiceFactory } from '../services/authService';

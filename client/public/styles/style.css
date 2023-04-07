@@ -5,7 +5,7 @@ body {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
-    overflow: hidden;
+    overflow: auto;
 
 }
 
@@ -149,7 +149,7 @@ a {
 
 
 
-#login-page, #register-page {
+#login-page, #register-page, #forum-page {
     border-radius: 6px;
     position: relative;
     border-top-right-radius: 0;
@@ -159,7 +159,14 @@ a {
     background: #161618;
 }
 
+#postbody {
+    width: 60%;
+    height: 200px
+}
 
+#title{
+    width: 50%;
+}
 
 
 
@@ -179,7 +186,7 @@ a {
     text-align: center;
 }
 
-input {
+input, textarea{
     background: whitesmoke;
     padding: 10px;
     margin-top: 10px;
@@ -226,4 +233,18 @@ input {
     background: #62626c;
     border-radius: 10px;
     padding: 5px;
+}
+
+
+
+
+
+
+
+.postcontainer h2{
+    color:whitesmoke;
+    font-size: 2rem;
+    text-align: center;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+
 }

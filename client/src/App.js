@@ -6,13 +6,17 @@ import { Home } from './Components/Home/Home';
 import { Login } from './Components/Login/Login';
 import { Register } from './Components/Register/Register';
 import { Logout } from './Components/Logout/Logout';
+import { Forum } from './Components/Forum/Forum';
 
 import { AuthProvider } from './contexts/AuthContext';
+import {ForumProvider} from './contexts/ForumContext'
 
 function App() {
     return (
         <div className="App">
             <AuthProvider>
+                <ForumProvider>
+
 
                 <Header />
                 {/* <!-- Main Content --> */}
@@ -22,10 +26,10 @@ function App() {
                         <Route path='/' element={<Home />} />
                         <Route path='/login' element={<Login />} />
                         <Route path='/register' element={<Register />} />
-                    <Route path='/logout' element={<Logout />} />
+                        <Route path='/logout' element={<Logout />} />
+                        <Route path='/forum' element={<Forum />} />
 
-                   {/*  <Route path='/catalog' element={<Catalog />} />
-                    <Route path='/catalog/:gameId' element={<GameDetails />} />
+                        {/*<Route path='/catalog/:gameId' element={<GameDetails />} />
                     
                     
                     <Route element={<RouteGuard />}>
@@ -40,6 +44,7 @@ function App() {
                 </main>
 
                 <Footer />
+                </ForumProvider>
             </AuthProvider>
         </div>
     );
