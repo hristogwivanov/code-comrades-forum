@@ -9,7 +9,7 @@ import { ThreadList } from './ThreadList/ThreadList'
 export const Forum = (
 ) => {
     const { onPostSubmit } = useForumContext();
-    const { userEmail } = useAuthContext(); 
+    const { userEmail, isAuthenticated } = useAuthContext(); 
     const { values, changeHandler, onSubmit } = useForm({
         postTitle: '',
         postBody: '',
@@ -22,7 +22,7 @@ export const Forum = (
             <ThreadList />
 
 
-            <form id="Post" method="POST" onSubmit={onSubmit}>
+           { isAuthenticated && (<form id="Post" method="POST" onSubmit={onSubmit}>
 
                 <div className="container">
                     <div className='inputDiv'>
@@ -47,7 +47,7 @@ export const Forum = (
                         <input type="submit" className="btn submit" value="Post" />
                     </div>
                 </div>
-            </form>
+            </form>)}
         </section>
     );
 }

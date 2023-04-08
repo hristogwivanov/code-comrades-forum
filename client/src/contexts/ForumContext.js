@@ -17,10 +17,10 @@ export const ForumProvider = ({
             .then(result => {
                 setPosts(result)
             })
-    }, []);
+    }, [forumService]);
 
     const onPostSubmit = async (data) => {
-        console.log("on Post data");
+        console.log('on Post data');
         console.log(data)
         const newPost = await forumService.create(data);
 

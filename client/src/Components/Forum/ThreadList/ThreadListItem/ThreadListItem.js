@@ -1,5 +1,5 @@
 // import { Link } from 'react-router-dom';
-import styles from './ThreadListItem.module.css'
+//import styles from './ThreadListItem.module.css'
 
 
 
@@ -11,12 +11,18 @@ export const ThreadListItem = ({
     userEmail,
     // userEmail,
 }) => {
-    return (
-        <div className={styles['ThreadListItem']}>
-                <p>{userEmail}</p>
+    return (<>
+            
+            <td> 
+                <strong>
+                {postTitle}<br />
+                </strong>
+                published by {userEmail}
+            </td>
+            {/* <p>{userEmail}</p>
                 <h2>{postTitle}</h2>
                 <p>{postBody}</p>
-                {/* <Link to={`/catalog/${_id}`} className="details-button">Details</Link> */}
-            </div>
+                <Link to={`/catalog/${_id}`} className="details-button">Details</Link> */}
+</>
     );
 }

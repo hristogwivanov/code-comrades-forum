@@ -21,7 +21,7 @@ export const AuthProvider = ({
             const result = await authService.login(data);
             setAuth(result);
 
-            navigate('/catalog');
+            navigate('/forum');
         } catch (error) {
             console.log('There is a problem');
         }

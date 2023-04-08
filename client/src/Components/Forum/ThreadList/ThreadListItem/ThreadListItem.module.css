@@ -1,4 +1,7 @@
-.ThreadListItem{
-    text-align: center;
-    color: whitesmoke;
-}
+.ThreadListItem
+    {
+        border: 1px solid #ddd;
+        padding: 8px;
+      }
+      
+
