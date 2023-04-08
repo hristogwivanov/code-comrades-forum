@@ -25,7 +25,7 @@ export const forumServiceFactory = (token) => {
 
     const create = async (postData) => {
         const result = await request.post(url, postData);
-
+        console.log("Create Post Result:");
         console.log(result);
 
         return result;

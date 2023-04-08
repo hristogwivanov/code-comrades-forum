@@ -20,6 +20,8 @@ export const ForumProvider = ({
     }, []);
 
     const onPostSubmit = async (data) => {
+        console.log("on Post data");
+        console.log(data)
         const newPost = await forumService.create(data);
 
         setPosts(state => [...state, newPost])

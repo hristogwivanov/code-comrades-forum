@@ -1,22 +1,26 @@
 import { useForumContext } from '../../contexts/ForumContext';
+import { useAuthContext } from '../../contexts/AuthContext';
 import { useForm } from '../../hooks/useForm';
 
-import { PostList } from'../../Components/PostList/PostList'
+import { ThreadList } from './ThreadList/ThreadList'
+
 
 
 export const Forum = (
 ) => {
     const { onPostSubmit } = useForumContext();
+    const { userEmail } = useAuthContext(); 
     const { values, changeHandler, onSubmit } = useForm({
         postTitle: '',
         postBody: '',
+        userEmail,
     }, onPostSubmit);
 
     return (
         <section id="forum-page" className="">
 
-            <PostList />
-      
+            <ThreadList />
+
 
             <form id="Post" method="POST" onSubmit={onSubmit}>
 
