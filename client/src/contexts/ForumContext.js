@@ -17,7 +17,7 @@ export const ForumProvider = ({
             .then(result => {
                 setPosts(result)
             })
-    }, [forumService]);
+    }, []);
 
     const onPostSubmit = async (data) => {
         console.log('on Post data');

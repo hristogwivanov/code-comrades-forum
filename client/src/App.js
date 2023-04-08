@@ -7,9 +7,10 @@ import { Login } from './Components/Login/Login';
 import { Register } from './Components/Register/Register';
 import { Logout } from './Components/Logout/Logout';
 import { Forum } from './Components/Forum/Forum';
+import { ThreadPage } from './Components/Forum/ThreadPage/ThreadPage';
 
 import { AuthProvider } from './contexts/AuthContext';
-import {ForumProvider} from './contexts/ForumContext'
+import { ForumProvider } from './contexts/ForumContext';
 
 function App() {
     return (
@@ -18,32 +19,31 @@ function App() {
                 <ForumProvider>
 
 
-                <Header />
-                {/* <!-- Main Content --> */}
+                    <Header />
+                    {/* <!-- Main Content --> */}
 
-                <main id="main-content">
-                    <Routes>
-                        <Route path='/' element={<Home />} />
-                        <Route path='/login' element={<Login />} />
-                        <Route path='/register' element={<Register />} />
-                        <Route path='/logout' element={<Logout />} />
-                        <Route path='/forum' element={<Forum />} />
+                    <main id="main-content">
+                        <Routes>
+                            <Route path='/' element={<Home />} />
+                            <Route path='/login' element={<Login />} />
+                            <Route path='/register' element={<Register />} />
+                            <Route path='/logout' element={<Logout />} />
+                            <Route path='/forum' element={<Forum />} />
+                            <Route path='/forum/:postId' element={<ThreadPage />} />
 
-                        {/*<Route path='/catalog/:gameId' element={<GameDetails />} />
-                    
-                    
+                            {/*
                     <Route element={<RouteGuard />}>
-                    <Route path='/catalog/:gameId/edit' element={
-                        <GameOwner>
-                        <EditGame />
-                        </GameOwner>
+                    <Route path='/catalog/:postId/edit' element={
+                        <PostOwner>
+                        <EditPost />
+                        </PostOwner>
                     } />
                     <Route path='/create-game' element={<CreateGame />} />
                 </Route> */}
-                    </Routes>
-                </main>
+                        </Routes>
+                    </main>
 
-                <Footer />
+                    <Footer />
                 </ForumProvider>
             </AuthProvider>
         </div>

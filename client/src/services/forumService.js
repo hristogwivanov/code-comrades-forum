@@ -17,11 +17,11 @@ export const forumServiceFactory = (token) => {
 
     };
 
-    // const getOne = async(gameId) => {
-    //     const result = await request.get(`${url}/${gameId}`);
-    //     console.log(result);
-    //     return result;
-    // };
+    const getOne = async(postId) => {
+        const result = await request.get(`${url}/${postId}`);
+        console.log(result);
+        return result;
+    };
 
     const create = async (postData) => {
         const result = await request.post(url, postData);
@@ -31,14 +31,14 @@ export const forumServiceFactory = (token) => {
         return result;
     };
 
-    // const edit = (gameId, data) => request.put(`${url}/${gameId}`, data);
+    // const edit = (postId, data) => request.put(`${url}/${postId}`, data);
 
-    //const deleteGame = (gameId) => request.delete(`${url}/${gameId}`);
+    //const deletepost = (postId) => request.delete(`${url}/${postId}`);
     return {
         getAll,
-        // getOne,
+        getOne,
         create,
         //  edit,
-        //  delete: deleteGame,
+        //  delete: deletepost,
     };
 }

@@ -8,7 +8,7 @@ export const Header = () => {
     return (
         <header>
             {/* <!-- Navigation --> */}
-            <Link to={'/'}><img src={'cclogo.png'} alt='Code Comrades Logo' style={{height: 160}}></img></Link>
+            <Link to={'/'}><img src={'/cclogo.png'} alt='Code Comrades Logo' style={{height: 160}}></img></Link>
             <nav>
                 {/* <!-- Logged-in users --> */}
                 {isAuthenticated && (
