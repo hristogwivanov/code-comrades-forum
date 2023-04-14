@@ -25,7 +25,7 @@ export const ThreadPosts = ({
 
             dispatch({ type: 'POST_FETCH', payload: postState })
         })
-    }, [postId]);
+    }, [forumService, postId]);
     console.log(post)
     return (<>
 

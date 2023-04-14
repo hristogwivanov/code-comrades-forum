@@ -11,6 +11,7 @@ import { ThreadPage } from './Components/Forum/ThreadPage/ThreadPage';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { ForumProvider } from './contexts/ForumContext';
+import { Settings } from './Components/Settings/Settings';
 
 function App() {
     return (
@@ -30,6 +31,8 @@ function App() {
                             <Route path='/logout' element={<Logout />} />
                             <Route path='/forum' element={<Forum />} />
                             <Route path='/forum/:postId' element={<ThreadPage />} />
+                            <Route path='/settings' element={<Settings />} />
+
 
                             {/*
                     <Route element={<RouteGuard />}>

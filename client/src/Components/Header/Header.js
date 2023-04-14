@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
+import styles from './Header.module.css';
+
 
 import { AuthContext } from '../../contexts/AuthContext';
 
@@ -8,7 +10,7 @@ export const Header = () => {
     return (
         <header>
             {/* <!-- Navigation --> */}
-            <Link to={'/'}><img src={'/cclogo.png'} alt='Code Comrades Logo' style={{height: 160}}></img></Link>
+            <Link to={'/'}><img src={'/cclogo.png'} alt='Code Comrades Logo' className={styles['logo']}></img></Link>
             <nav>
                 {/* <!-- Logged-in users --> */}
                 {isAuthenticated && (

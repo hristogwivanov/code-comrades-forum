@@ -48,8 +48,13 @@ footer {
 }
 
 nav a {
-    margin: 0 0.5em;
+    margin: 0 0.5em;    
 }
+
+nav a:last-child {
+    margin-right: 2em;
+}
+
 
 nav a:hover {
     cursor: pointer;
@@ -103,13 +108,29 @@ li {
 }
 
 button {
+    background-color: #62626C;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 5px; 
+    border-radius: 8px;
     font-weight: bold;
-    padding: 0.2em;
-    margin: 0.2em;
-    border: 1px solid white;
-    border-radius: 0.3em;
-    background-color: transparent;
-}
+  }
+
+  button:hover {
+    background-color: #403C42;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin-bottom: 5px; 
+    border-radius: 8px;
+  }
 
 a {
     margin: 0.0em;
