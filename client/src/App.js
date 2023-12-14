@@ -8,33 +8,35 @@ import { Register } from './Components/Register/Register';
 import { Logout } from './Components/Logout/Logout';
 import { Forum } from './Components/Forum/Forum';
 import { ThreadPage } from './Components/Forum/ThreadPage/ThreadPage';
+import { Settings } from './Components/Settings/Settings';
 
 import { AuthProvider } from './contexts/AuthContext';
 import { ForumProvider } from './contexts/ForumContext';
-import { Settings } from './Components/Settings/Settings';
+import { UserProvider } from './contexts/UserContext';
 
 function App() {
     return (
         <div className="App">
-            <AuthProvider>
-                <ForumProvider>
+            <UserProvider>
+                <AuthProvider>
+                    <ForumProvider>
 
 
-                    <Header />
-                    {/* <!-- Main Content --> */}
+                        <Header />
+                        {/* <!-- Main Content --> */}
 
-                    <main id="main-content">
-                        <Routes>
-                            <Route path='/' element={<Home />} />
-                            <Route path='/login' element={<Login />} />
-                            <Route path='/register' element={<Register />} />
-                            <Route path='/logout' element={<Logout />} />
-                            <Route path='/forum' element={<Forum />} />
-                            <Route path='/forum/:postId' element={<ThreadPage />} />
-                            <Route path='/settings' element={<Settings />} />
+                        <main id="main-content">
+                            <Routes>
+                                <Route path='/' element={<Home />} />
+                                <Route path='/login' element={<Login />} />
+                                <Route path='/register' element={<Register />} />
+                                <Route path='/logout' element={<Logout />} />
+                                <Route path='/forum' element={<Forum />} />
+                                <Route path='/forum/:postId' element={<ThreadPage />} />
+                                <Route path='/settings' element={<Settings />} />
 
 
-                            {/*
+                                {/*
                     <Route element={<RouteGuard />}>
                     <Route path='/catalog/:postId/edit' element={
                         <PostOwner>
@@ -43,12 +45,13 @@ function App() {
                     } />
                     <Route path='/create-game' element={<CreateGame />} />
                 </Route> */}
-                        </Routes>
-                    </main>
+                            </Routes>
+                        </main>
 
-                    <Footer />
-                </ForumProvider>
-            </AuthProvider>
+                        <Footer />
+                    </ForumProvider>
+                </AuthProvider>
+            </UserProvider>
         </div>
     );
 }

@@ -25,7 +25,7 @@ export const ThreadPosts = ({
 
             dispatch({ type: 'POST_FETCH', payload: postState })
         })
-    }, [forumService, postId]);
+    }, []);
     console.log(post)
     return (<>
 
@@ -35,7 +35,7 @@ export const ThreadPosts = ({
             <th>{post.postTitle}</th>
             <tr><div className={styles['userinfo']}>
                 <strong>
-                {post.userEmail}
+                {post.userName}
                 </strong>
                 <br />
                 <img src='https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png' alt='userpic'></img>

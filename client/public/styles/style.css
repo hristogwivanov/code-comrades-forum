@@ -118,6 +118,7 @@ button {
     margin-bottom: 5px; 
     border-radius: 8px;
     font-weight: bold;
+    margin-right: 10px;
   }
 
   button:hover {

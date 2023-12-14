@@ -6,7 +6,7 @@ import styles from './Header.module.css';
 import { AuthContext } from '../../contexts/AuthContext';
 
 export const Header = () => {
-    const { isAuthenticated, userEmail } = useContext(AuthContext);
+    const { isAuthenticated, userName } = useContext(AuthContext);
     return (
         <header>
             {/* <!-- Navigation --> */}
@@ -15,7 +15,7 @@ export const Header = () => {
                 {/* <!-- Logged-in users --> */}
                 {isAuthenticated && (
                     <div id="user">
-                        <span style={{margin: '60px'}}>Hi, {userEmail}</span>
+                        <span style={{margin: '60px'}}>Hi, {userName}</span>
                         <Link to="/forum">Forum</Link> 
                         <Link to="/profile">Profile</Link>
                         <Link to="/settings">Settings</Link>

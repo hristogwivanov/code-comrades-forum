@@ -44,8 +44,29 @@
     color: white;
 }
 
+.Table textarea, .Table input{
+    font-size: 20px;
+    width: 60%;
+    border: 3px solid #161618;
+    margin-bottom: 6px;
+}
+
+.Table textarea{
+    margin-bottom: 0;
+}
+
+
 .Table a{
     font-weight: normal;
+}
+
+.Table span{
+    font-size: 24px;
+}
+
+
+.Table button{
+    width: 220px;
 }
 
 .userinfo{

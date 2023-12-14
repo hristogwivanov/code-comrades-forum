@@ -9,20 +9,22 @@ import { ThreadList } from './ThreadList/ThreadList'
 export const Forum = (
 ) => {
     const { onPostSubmit } = useForumContext();
-    const { userEmail, isAuthenticated } = useAuthContext(); 
+    const { userName, userEmail, isAuthenticated } = useAuthContext();
     const { values, changeHandler, onSubmit } = useForm({
         postTitle: '',
         postBody: '',
+        userName,
         userEmail,
     }, onPostSubmit);
 
+    
     return (
         <section id="forum-page" className="">
 
             <ThreadList />
 
 
-           { isAuthenticated && (<form id="Post" method="POST" onSubmit={onSubmit}>
+            {isAuthenticated && (<form id="Post" method="POST" onSubmit={onSubmit}>
 
                 <div className="container">
                     <div className='inputDiv'>

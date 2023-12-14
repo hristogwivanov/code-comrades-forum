@@ -1,47 +1,62 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useAuthContext } from '../../contexts/AuthContext';
-import styles from './Settings.module.css';
-import Modal from './Modal/Modal';
+import { useUserContext } from '../../contexts/UserContext';
 
+import styles from './Settings.module.css';
 
 export const Settings = () => {
+  const { users, changeProfilePic } = useUserContext();
+  const { userId } = useAuthContext();
+  const myUserPublicInfoArray = users.filter(user => user._ownerId === userId);
+  const myUserPublicInfo = myUserPublicInfoArray[0];
+  
+  const [newProfilePic, setNewProfilePic] = useState('');
 
-    const { userEmail } = useAuthContext();
-    const [show, setShow] = useState(false);
+  const handleProfilePicChange = (event) => {
+    setNewProfilePic(event.target.value);
+  }
 
+  const handleProfilePicSubmit = () => {
+    changeProfilePic(newProfilePic);
+  }
 
-    return (<>
-        <section id={styles['settings-page']} className="">
-            <table className={styles['Table']}>
-                <thead>
+  if (myUserPublicInfo) {
+    const { username, description, profilePic } = myUserPublicInfo;
 
-                    <tr><td><strong>Settings</strong></td></tr>
-                </thead>
-                <tbody>
-                    <tr><td>
-                        <div className={styles['userinfo']}>
-                            <strong>
-                                {userEmail}
-                            </strong>
-                            <br />
-                            <img src='https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png' alt='userpic'></img>
-                            <br />
-
-                        </div>
-                        <button>Change Avatar</button><br />
-                        <p>Lorem Ipsum dolor asopdkjdsa</p>
-                        <button onClick={() => setShow(true)}>Change About Info</button>
-                        <Modal title="My Modal" onClose={() => setShow(false)} show={show}>
-                            <p>This is modal body</p>
-                        </Modal>
-                    </td>
-
-                    </tr>
-
-                </tbody>
-            </table>
-        </section>
-
-    </>
+    return (
+      <section id={styles['settings-page']} className="">
+        <table className={styles['Table']}>
+          <thead>
+            <tr><td><strong>Settings</strong></td></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div className={styles['userinfo']}>
+                  <strong>
+                    <span>
+                      {username}
+                    </span>
+                  </strong>
+                  <br />
+                  <img src={profilePic} alt='userpic'></img>
+                  <br />
+                </div>
+                <input 
+                  name='newProfilePic'
+                  defaultValue={profilePic}
+                  onChange={handleProfilePicChange}
+                />
+                <br />
+                <button onClick={handleProfilePicSubmit}>Change Avatar</button>
+                <br />
+                <textarea defaultValue={description} /><br />
+                <button>Change About Info</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
     );
+  }
 }

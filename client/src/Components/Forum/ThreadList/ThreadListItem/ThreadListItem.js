@@ -1,6 +1,6 @@
 export const ThreadListItem = ({
     postTitle,
-    userEmail,
+    userName,
 }) => {
     return (<>
             
@@ -8,7 +8,7 @@ export const ThreadListItem = ({
                 <strong>
                 {postTitle}<br />
                 </strong>
-                published by {userEmail}
+                published by <strong>{userName}</strong>
             </td>
 
 </>

@@ -8,6 +8,7 @@ import { AuthContext } from '../../contexts/AuthContext';
 export const Register = () => {
     const { onRegisterSubmit } = useContext(AuthContext);
     const { values, changeHandler, onSubmit } = useForm({
+        username: '',
         email: '',
         password: '',
         confirmPassword: '',
@@ -20,40 +21,51 @@ export const Register = () => {
                 <div className="container">
                     <div className='inputDiv'>
 
-                    <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        placeholder="Email"
-                        value={values.email}
-                        onChange={changeHandler}
-                    />
-</div>
-<div className='inputDiv'>
-
-                    <input
-                        type="password"
-                        name="password"
-                        id="register-password"
-                        value={values.password}
-                        onChange={changeHandler}
-                        placeholder="Password"
-                    />
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Username"
+                            value={values.username}
+                            onChange={changeHandler}
+                        />
                     </div>
                     <div className='inputDiv'>
 
-                    <input
-                        type="password"
-                        name="confirmPassword"
-                        id="confirm-password"
-                        value={values.confirmPassword}
-                        onChange={changeHandler}
-                        placeholder="Repeat password"
-                    />
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Email"
+                            value={values.email}
+                            onChange={changeHandler}
+                        />
                     </div>
                     <div className='inputDiv'>
 
-                    <input className="btn submit" type="submit" value="Register" />
+                        <input
+                            type="password"
+                            name="password"
+                            id="register-password"
+                            value={values.password}
+                            onChange={changeHandler}
+                            placeholder="Password"
+                        />
+                    </div>
+                    <div className='inputDiv'>
+
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            id="confirm-password"
+                            value={values.confirmPassword}
+                            onChange={changeHandler}
+                            placeholder="Repeat password"
+                        />
+                    </div>
+                    <div className='inputDiv'>
+
+                        <input className="btn submit" type="submit" value="Register" />
                     </div>
 
                     <p className="field">
