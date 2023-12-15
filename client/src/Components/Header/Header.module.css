@@ -1,8 +1,36 @@
-.container{
-    width: 100%; 
+header{
+    margin-top: 10px;
 }
 
 .logo{
-    height: 160px;
-    margin-left: 12px;
+    height: 140px;
 }
+
+header div.container{
+    width: 100%;
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-end;
+    background-color: aqua;
+}
+
+header div.container nav{
+    width: 100%;
+    display:flex;
+    align-content: flex-end;
+    background-color: bisque;
+}
+
+header div.container nav{
+    align-items: end;
+    display: flex;
+}
+
+
+/* header div nav {
+}
+
+header div nav div{
+
+} */

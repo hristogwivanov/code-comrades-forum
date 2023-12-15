@@ -8,7 +8,8 @@ import { ThreadListItem } from './ThreadListItem/ThreadListItem';
 export const ThreadList = () => {
     const { posts } = useForumContext();
     return (
-        <section id="threads-page">
+        <section id="thread-list">
+            <div class="container">
             <table className={styles['Table']}>
                 <th>Title/Author</th>
                 {/* <th>Statistics</th>
@@ -21,6 +22,7 @@ export const ThreadList = () => {
                     </tr>
                 )}
             </table>
+            </div>
             <br />
 
             {posts.length === 0 && (

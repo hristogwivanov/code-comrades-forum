@@ -20,8 +20,6 @@ function App() {
             <UserProvider>
                 <AuthProvider>
                     <ForumProvider>
-
-
                         <Header />
                         {/* <!-- Main Content --> */}
 

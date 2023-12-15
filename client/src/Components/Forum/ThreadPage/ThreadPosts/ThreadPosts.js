@@ -27,7 +27,7 @@ export const ThreadPosts = ({
         })
     }, []);
     console.log(post)
-    return (<>
+    return (<div className="container">
 
         <table
             className={styles['Table']}
@@ -47,7 +47,7 @@ export const ThreadPosts = ({
         </table>
         <br />
 
-    </>
+    </div>
     );
 }
 
