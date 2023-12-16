@@ -6,8 +6,8 @@ export const Home = () => {
             width: '100%',
             height: 'auto',
             display: 'flex',
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            margin: '0 auto',
+            padding: '16px',
             maxWidth: '1200px'
         }} /></Link>
     );
