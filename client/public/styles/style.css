@@ -1,10 +1,12 @@
+html {
+}
+
 body{
     background-color: #161618;
 }
 
 #root{
     margin: 0 auto;    
-    padding-left: calc(100vw - 100%);
 }
 
 .App{
@@ -16,12 +18,15 @@ body{
     margin: 0 auto;
 }
 
+header,
+footer,
+#main-content{
+    padding-left: calc(100vw - 100%);
+}
 
 header,
 footer {
     background-color: #161618;
-    width: 100%;
-    overflow: hidden;
     color: whitesmoke;
 
 }
@@ -36,17 +41,14 @@ header nav {
 footer {
     position: fixed;
     bottom: 0;
-    font-family: Montserrat;
-    margin: 0 auto;
     width: 100%;
+    font-family: Montserrat;
     box-sizing: border-box;
-
+    text-align: center;
 }
 
-footer div p{
-    margin: 0 auto;
-    text-align: center;
-    padding: 4px;
+footer div{
+    padding: 4px 0px;
 
 }
 
