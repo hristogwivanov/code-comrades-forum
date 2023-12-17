@@ -15,9 +15,10 @@
 }
 
 .Table tr {
-    background-color: #f2f2f2;
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
+    display: flex;
+    flex-direction: row;
 }
 
 .Table th {
@@ -29,10 +30,13 @@
     background-color: #62626c;
     color: white;
     font-weight: bold;
+    width: 100%;
 }
 
 Table td{
     float: left;
+    background-color: #f2f2f2;
+
 }
 
 .userinfo {
@@ -42,4 +46,17 @@ Table td{
 .userinfo img {
     height: 200px;
     width: 200px;
+}
+
+.post-cell{
+    position: relative;
+    width: 100%;
+}
+
+#button-section{
+    position: absolute;
+    display: flex;
+    bottom: 0;
+    right: 0;
+    
 }

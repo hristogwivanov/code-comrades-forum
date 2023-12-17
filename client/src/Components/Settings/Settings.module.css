@@ -22,13 +22,17 @@
 .Table thead {
     /* border: 1px solid #ddd; */
     padding: 8px;
+    width: 100%;
 }
 
 .Table tr {
-    background-color: #f2f2f2;
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
     border: 2px solid red;
+}
+
+.Table tr td{
+    background-color: #f2f2f2;
 }
 
 .Table thead tr td {

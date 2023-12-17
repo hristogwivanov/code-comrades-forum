@@ -41,7 +41,13 @@ export const ThreadPosts = ({ userEmail }) => {
                             ></img>
                             <br />
                         </td>
-                        <td>{post.postBody}</td>
+                        <td className={styles["post-cell"]}>
+                            <div>{post.postBody}</div>
+                            <div id={styles["button-section"]}>
+                                <button>Edit</button>
+                                <button>Delete</button>
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
