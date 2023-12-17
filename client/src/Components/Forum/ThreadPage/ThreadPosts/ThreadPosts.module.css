@@ -18,10 +18,7 @@
     background-color: #f2f2f2;
     border-bottom-left-radius: 10px;
     border-top-right-radius: 10px;
-    border: 2px solid red;
 }
-
-
 
 .Table th {
     border-top-left-radius: 10px;
@@ -29,19 +26,20 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #62626C;
+    background-color: #62626c;
     color: white;
+    font-weight: bold;
 }
 
-.Table a{
-    font-weight: normal;
-}
-
-.userinfo{
+Table td{
     float: left;
 }
 
-.userinfo img{
+.userinfo {
+    font-weight: bold;
+}
+
+.userinfo img {
     height: 200px;
     width: 200px;
 }

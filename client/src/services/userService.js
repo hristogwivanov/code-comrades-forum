@@ -32,14 +32,14 @@ export const userServiceFactory = () => {
 
 
 
-    //const edit = (postId, data) => request.put(`${url}/${postId}`, data);
+    const edit = (userId, data) => request.put(`${url}/${userId}`, data);
 
     //const deletepost = (postId) => request.delete(`${url}/${postId}`);
     return {
         getAll,
         getOne,
         create,
-        //  edit,
+        edit,
         //  delete: deletepost,
     };
 }

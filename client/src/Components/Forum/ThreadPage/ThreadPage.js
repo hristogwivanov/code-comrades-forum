@@ -29,10 +29,6 @@ export const ThreadPage = (
     return (
         <section id="forum-page" className="">
         <ThreadPosts post/>
-
-
-
-
             {isAuthenticated && (<form id="Post" method="POST" onSubmit={onSubmit}>
 
                 <div className="container">

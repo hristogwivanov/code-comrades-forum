@@ -19,7 +19,7 @@ export const Settings = () => {
     };
 
     const handleProfilePicSubmit = () => {
-        changeProfilePic(newProfilePic);
+        changeProfilePic(newProfilePic, userId);
     };
 
     if (myUserPublicInfo) {
