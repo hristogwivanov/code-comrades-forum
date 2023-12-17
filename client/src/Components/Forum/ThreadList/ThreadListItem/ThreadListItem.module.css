@@ -1,7 +1,7 @@
-.ThreadListItem
-    {
-        border: 1px solid #ddd;
-        padding: 8px;
-      }
-      
+.Item{
+  width: 100%;
+}
 
+.Item strong{
+  font-weight: bold;
+}
