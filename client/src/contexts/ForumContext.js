@@ -39,9 +39,9 @@ export const ForumProvider = ({
     //     navigate(`/catalog/${values._id}`);
     // };
 
-    // const deleteGame = (gameId) => {
-    //     setGames(state => state.filter(game => game._id !== gameId))
-    // };
+    const deleteThread = (threadId) => {
+        setPosts(state => state.filter(post => post._id !== threadId));
+    };
 
     // const getGame = (gameId) => {
     //     return games.find(game => game._id === gameId);
@@ -50,8 +50,8 @@ export const ForumProvider = ({
     const contextValues = {
         posts,
         // getGame,
-         onPostSubmit,
-        // deleteGame,
+        onPostSubmit,
+        deleteThread,
         // onGameEditSubmit,
     };
 

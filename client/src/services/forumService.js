@@ -31,14 +31,15 @@ export const forumServiceFactory = (token) => {
         return result;
     };
 
-    // const edit = (postId, data) => request.put(`${url}/${postId}`, data);
+    // const editThread = (threadId, data) => request.put(`${url}/${threadId}`, data);
 
-    //const deletepost = (postId) => request.delete(`${url}/${postId}`);
+    const deleteThread = (threadId) => request.delete(`${url}/${threadId}`);
+
     return {
         getAll,
         getOne,
         create,
         //  edit,
-        //  delete: deletepost,
+        delete: deleteThread,
     };
 }

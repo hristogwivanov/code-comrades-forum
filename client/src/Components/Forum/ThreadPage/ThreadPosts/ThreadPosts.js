@@ -1,16 +1,24 @@
 import { useEffect, useReducer } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+
 import { useService } from "../../../../hooks/useService";
 import { postReducer } from "../../../../reducers/postReducer";
 import { forumServiceFactory } from "../../../../services/forumService";
 
+import { useAuthContext } from "../../../../contexts/AuthContext";
+import { useForumContext } from "../../../../contexts/ForumContext";
+
 import styles from "./ThreadPosts.module.css";
 
-export const ThreadPosts = ({ userEmail }) => {
+export const ThreadPosts = () => {
     const [post, dispatch] = useReducer(postReducer, {});
 
     const { postId } = useParams();
+    const { userId, isAuthenticated, userEmail } = useAuthContext();
+
     const forumService = useService(forumServiceFactory);
+    const navigate = useNavigate();
+    const { deleteThread } = useForumContext();
 
     useEffect(() => {
         Promise.all([forumService.getOne(postId)]).then(([postData]) => {
@@ -21,7 +29,21 @@ export const ThreadPosts = ({ userEmail }) => {
             dispatch({ type: "POST_FETCH", payload: postState });
         });
     }, []);
-    console.log(post);
+
+    const isOwner = post.ownerId === userId;
+
+    const onDeleteClick = async () => {
+        // eslint-disable-next-line no-restricted-globals
+        const result = window.confirm(
+            `Are youse sure you want to delete ${post.postTitle}`
+        );
+        if (result) {
+            await forumService.delete(post._id);
+            deleteThread(post._id);
+            navigate(`/forum`);
+        }
+    };
+
     return (
         <div className="container">
             <table className={styles["Table"]}>
@@ -45,7 +67,7 @@ export const ThreadPosts = ({ userEmail }) => {
                             <div>{post.postBody}</div>
                             <div id={styles["button-section"]}>
                                 <button>Edit</button>
-                                <button>Delete</button>
+                                <button onClick={onDeleteClick}>Delete</button>
                             </div>
                         </td>
                     </tr>
