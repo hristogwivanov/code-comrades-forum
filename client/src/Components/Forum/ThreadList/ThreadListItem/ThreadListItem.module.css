@@ -1,7 +1,13 @@
-.Item{
+.Item {
   width: 100%;
 }
 
-.Item strong{
+.Item strong {
   font-weight: bold;
+}
+
+
+.Link {
+  width: 100%;
+  padding: 8px;
 }

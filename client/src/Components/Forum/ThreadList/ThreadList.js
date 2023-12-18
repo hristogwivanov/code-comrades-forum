@@ -1,5 +1,4 @@
 import styles from "./ThreadList.module.css";
-import { Link } from "react-router-dom";
 
 import { useForumContext } from "../../../contexts/ForumContext";
 
@@ -9,7 +8,7 @@ export const ThreadList = () => {
     const { posts } = useForumContext();
     return (
         <section id="thread-list">
-            <div class="container">
+            <div className="container">
                 <table className={styles["Table"]}>
                     <thead>
                         <tr>
@@ -20,10 +19,8 @@ export const ThreadList = () => {
                 <th>Last</th> */}
                     <tbody>
                         {posts.map((x) => (
-                            <tr>
-                                <Link to={x._id}>
-                                    <ThreadListItem key={x._id} {...x} />
-                                </Link>
+                            <tr key={x._id}>
+                                <ThreadListItem {...x} />
                             </tr>
                         ))}
                     </tbody>
