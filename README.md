@@ -23,7 +23,7 @@ The project will start with the home screen!
 6. Settings page - where you can change your avatar and user information. 
 
 ### Future development:
-1. To migrate the back-end to firebase, which will give admin panel functionality, lift the limitations of the practice server and allow deployment for public use. 
+1. To migrate the back-end to firebase, which will give admin panel functionality, data persistance, lift the limitations of the practice server and allow deployment for public use. 
 2. To improve edit, change avatar and change user info features. 
 3. To imprement change password function. 
 4. To implement profile page where user info and all own posts will be displayed. 
