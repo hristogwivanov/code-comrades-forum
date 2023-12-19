@@ -31,5 +31,4 @@ The project will start with the home screen!
 6. To deplay the project on vercel or Heroku for public use.
 
 ### Screenshot: 
-
-
+![code comrades screenshot](https://github.com/hristogwivanov/code-comrades-forum/blob/main/Code%20Comrades%20screenshot.jpg)
