@@ -21,13 +21,14 @@ export const Settings = () => {
     const handleProfilePicSubmit = () => {
         changeProfilePic(newProfilePic, userId);
     };
-
+    console.log("settings")
     if (myUserPublicInfo) {
+        console.log("info available")
         const { username, description, profilePic } = myUserPublicInfo;
 
         return (
             <section id={styles["settings-page"]}>
-                <div class="container">
+                <div className="container">
                     <table className={styles["Table"]}>
                         <thead>
                             <tr>
