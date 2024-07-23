@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
+import { auth, firestore } from '../../firebase';
 
 import { AuthContext } from '../../contexts/AuthContext';
 
