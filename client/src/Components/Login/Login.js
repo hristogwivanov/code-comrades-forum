@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { auth, firestore } from '../../firebase';
 
-import { useAuthContext } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useForm } from "../../hooks/useForm";
 
 const LoginFormKeys = {
@@ -13,7 +13,7 @@ export const Login = () =>
     //  {auth,}
     {
         //   const { onLoginSubmit } = auth;
-        const { onLoginSubmit } = useAuthContext();
+        const { onLoginSubmit } = useAuth();
         const { values, changeHandler, onSubmit } = useForm(
             {
                 [LoginFormKeys.Username]: "",

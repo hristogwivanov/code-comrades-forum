@@ -1,11 +1,12 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // Added Link import
 
 function Register() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmRef = useRef();
+    const usernameRef = useRef();
     const { signup } = useAuth();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ function Register() {
             setError('');
             setLoading(true);
             await signup(emailRef.current.value, passwordRef.current.value);
+            // Assuming signup also accepts username
             navigate('/');
         } catch {
             setError('Failed to create an account');
@@ -31,25 +33,64 @@ function Register() {
     }
 
     return (
-        <div>
-            <h2>Register</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Email</label>
-                    <input type="email" ref={emailRef} required />
-                </div>
-                <div>
-                    <label>Password</label>
-                    <input type="password" ref={passwordRef} required />
-                </div>
-                <div>
-                    <label>Password Confirmation</label>
-                    <input type="password" ref={passwordConfirmRef} required />
-                </div>
-                <button disabled={loading} type="submit">Register</button>
-            </form>
-        </div>
+        <section id="register-page" className="content auth">
+            <div className="container">
+                <h2>Register</h2>
+                {error && <p>{error}</p>}
+                <form id="register" onSubmit={handleSubmit}>
+                    <div className='inputDiv'>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="Username"
+                            ref={usernameRef}
+                            required
+                        />
+                    </div>
+                    <div className='inputDiv'>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            placeholder="Email"
+                            ref={emailRef}
+                            required
+                        />
+                    </div>
+                    <div className='inputDiv'>
+                        <input
+                            type="password"
+                            name="password"
+                            id="register-password"
+                            placeholder="Password"
+                            ref={passwordRef}
+                            required
+                        />
+                    </div>
+                    <div className='inputDiv'>
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            id="confirm-password"
+                            placeholder="Repeat password"
+                            ref={passwordConfirmRef}
+                            required
+                        />
+                    </div>
+                    <div className='inputDiv'>
+                        <button disabled={loading} type="submit" className="btn submit">
+                            Register
+                        </button>
+                    </div>
+                    <p className="field">
+                        <span>
+                            If you already have profile click <Link to="/login">here</Link>
+                        </span>
+                    </p>
+                </form>
+            </div>
+        </section>
     );
 }
 

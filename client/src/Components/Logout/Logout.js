@@ -2,15 +2,15 @@ import { useContext, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { auth, firestore } from '../../firebase';
 
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Logout = () => {
-    const { onLogout } = useContext(AuthContext);
+    const { logout } = useAuth();
 
     useEffect(() => {
-        onLogout();
+        logout();
 
-    }, [onLogout])
+    }, [logout])
 
     return <Navigate to="/" />
 };

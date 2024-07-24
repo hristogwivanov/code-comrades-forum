@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useAuthContext } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext";
 import { useUserContext } from "../../contexts/UserContext";
 
 import styles from "./Settings.module.css";
 
 export const Settings = () => {
     const { users, changeProfilePic } = useUserContext();
-    const { userId } = useAuthContext();
+    const { userId } = useAuth();
     const myUserPublicInfoArray = users.filter(
         (user) => user._ownerId === userId
     );
