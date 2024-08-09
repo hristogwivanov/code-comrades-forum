@@ -10,15 +10,16 @@ export const userServiceFactory = () => {
     const request = requestFactory();
 
     const getAll = async () => {
-        const result = await request.get(url);
+        //const result = await request.get(url);
+        const result = "";
         const users = Object.values(result);
-       //console.log(result)
+        //console.log(result)
 
         return users;
 
     };
 
-    const getOne = async(userPublicId) => {
+    const getOne = async (userPublicId) => {
         const result = await request.get(`${url}/${userPublicId}`);
         return result;
     };

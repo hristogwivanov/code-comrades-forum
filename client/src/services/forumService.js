@@ -10,7 +10,8 @@ export const forumServiceFactory = (token) => {
     const request = requestFactory(token);
 
     const getAll = async () => {
-        const result = await request.get(url);
+        //const result = await request.get(url);
+        const result = "";
         const posts = Object.values(result);
 
         return posts;
