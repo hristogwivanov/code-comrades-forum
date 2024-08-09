@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { auth } from '../firebase';
+import { auth, firestore } from '../firebase';
+import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
+import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -7,6 +9,27 @@ export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
+
+    const signup = async (email, password) => {
+        console.log("inside the signup function");
+        console.log(email);
+        console.log(password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        // After successful signup, you can add additional user info to Firestore
+        await setDoc(doc(firestore, 'users', userCredential.user.uid), {
+            email: email,
+            // Add other user info here if needed
+        });
+        return userCredential;
+    };
+
+    const login = (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password);
+    };
+
+    const logout = () => {
+        return signOut(auth);
+    };
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -19,7 +42,10 @@ export const AuthProvider = ({ children }) => {
     const value = {
         currentUser,
         userEmail: currentUser?.email,
-        isAuthenticated: !!currentUser
+        isAuthenticated: !!currentUser,
+        signup,  // Make sure to include signup here
+        login,   // Include login if you need it elsewhere
+        logout   // Include logout if needed
     };
 
     return (

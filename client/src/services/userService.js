@@ -18,7 +18,7 @@ export const userServiceFactory = () => {
         return users;
 
     };
-
+    
     const getOne = async (userPublicId) => {
         const result = await request.get(`${url}/${userPublicId}`);
         return result;

@@ -23,7 +23,10 @@ function Register() {
             setError('');
             setLoading(true);
             console.log("loading");
+            console.log(emailRef.current.value);
+            console.log(passwordRef.current.value);
             await signup(emailRef.current.value, passwordRef.current.value);
+            console.log(">>>after sign up")
             // Assuming signup also accepts username
             navigate('/');
         } catch {
