@@ -1,46 +1,58 @@
-import { requestFactory } from './requester';
+import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { firestore } from '../firebase';
 
-const baseUrl = process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3030'
-    : 'http://localhost:3030'; //TODO: Add server url when deployed
-const url = `${baseUrl}/data/posts`;
+export const forumServiceFactory = () => {
+    const postsCollectionRef = collection(firestore, 'posts');
 
-
-export const forumServiceFactory = (token) => {
-    const request = requestFactory(token);
+    const create = async (data) => {
+        try {
+            const docRef = await addDoc(postsCollectionRef, data);
+            return { id: docRef.id, ...data };
+        } catch (error) {
+            console.error('Error creating post:', error);
+            throw error;
+        }
+    };
 
     const getAll = async () => {
-        //const result = await request.get(url);
-        const result = "";
-        const posts = Object.values(result);
-
-        return posts;
-
+        try {
+            const querySnapshot = await getDocs(postsCollectionRef);
+            const posts = querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+            }));
+            return posts;
+        } catch (error) {
+            console.error('Error getting posts:', error);
+            throw error;
+        }
     };
 
-    const getOne = async(postId) => {
-        const result = await request.get(`${url}/${postId}`);
-        console.log(result);
-        return result;
+    const update = async (id, data) => {
+        try {
+            const postRef = doc(firestore, 'posts', id);
+            await updateDoc(postRef, data);
+            return { id, ...data };
+        } catch (error) {
+            console.error('Error updating post:', error);
+            throw error;
+        }
     };
 
-    const create = async (postData) => {
-        const result = await request.post(url, postData);
-        console.log('Create Post Result:');
-        console.log(result);
-
-        return result;
+    const remove = async (id) => {
+        try {
+            const postRef = doc(firestore, 'posts', id);
+            await deleteDoc(postRef);
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            throw error;
+        }
     };
-
-    // const editThread = (threadId, data) => request.put(`${url}/${threadId}`, data);
-
-    const deleteThread = (threadId) => request.delete(`${url}/${threadId}`);
 
     return {
-        getAll,
-        getOne,
         create,
-        //  edit,
-        delete: deleteThread,
+        getAll,
+        update,
+        remove,
     };
-}
+};

@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import { auth, firestore } from './firebase';
+import { auth, firestore } from "./firebase";
 
 import { Header } from "./Components/Header/Header";
 import { Footer } from "./Components/Footer/Footer";
 import { Home } from "./Components/Home/Home";
 import { Login } from "./Components/Login/Login";
-import Register from './Components/Register/Register';
+import Register from "./Components/Register/Register";
 import { Logout } from "./Components/Logout/Logout";
 import Forum from "./Components/Forum/Forum";
 import { ThreadPage } from "./Components/Forum/ThreadPage/ThreadPage";
@@ -18,8 +18,8 @@ import { UserProvider } from "./contexts/UserContext";
 function App() {
     return (
         <div className="App">
-            <UserProvider>
-                <AuthProvider>
+            <AuthProvider>
+                <UserProvider>
                     <ForumProvider>
                         <Header />
                         {/* <!-- Main Content --> */}
@@ -57,8 +57,8 @@ function App() {
 
                         <Footer />
                     </ForumProvider>
-                </AuthProvider>
-            </UserProvider>
+                </UserProvider>
+            </AuthProvider>
         </div>
     );
 }

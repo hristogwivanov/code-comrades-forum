@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, firestore } from '../firebase';
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { collection, query, where, getDocs, doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, collection, query, where, getDocs } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -10,69 +10,60 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [userName, setUserName] = useState("");
+    const [userEmail, setUserEmail] = useState("");
+    const [loading, setLoading] = useState(true); // Added loading state
 
     const signup = async (email, password, username) => {
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            await setDoc(doc(firestore, 'users', userCredential.user.uid), {
-                email: email,
-                username: username  // Store the username in Firestore
-            });
-            return userCredential;
-        } catch (error) {
-            console.error("Error during signup:", error.message, error.code, error);
-            throw error;
-        }
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await setDoc(doc(firestore, 'users', userCredential.user.uid), {
+            email: email,
+            username: username,
+        });
+        setCurrentUser(userCredential.user);
+        setUserName(username);
+        setUserEmail(email);
     };
 
     const login = async (username, password) => {
-        try {
-            // Look up the user document by username
-            const usersRef = collection(firestore, 'users');
-            const q = query(usersRef, where('username', '==', username));
-            const querySnapshot = await getDocs(q);
+        const usersRef = collection(firestore, 'users');
+        const q = query(usersRef, where('username', '==', username));
+        const querySnapshot = await getDocs(q);
 
-            if (querySnapshot.empty) {
-                throw new Error('No user found with this username');
-            }
-
-            // Assuming username is unique, there should be only one user
-            const userDoc = querySnapshot.docs[0];
-            const email = userDoc.data().email;
-
-            // Now authenticate with the email
-            const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-            // After successful login, store the username in context
-            setUserName(username);
-            setCurrentUser(userCredential.user);
-
-            return userCredential;
-        } catch (error) {
-            console.error("Error during login:", error.message, error.code, error);
-            throw error;
+        if (querySnapshot.empty) {
+            throw new Error('No user found with this username');
         }
+
+        const userDoc = querySnapshot.docs[0];
+        const email = userDoc.data().email;
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+        setCurrentUser(userCredential.user);
+        setUserName(username);
+        setUserEmail(email);
     };
 
     const logout = async () => {
         await signOut(auth);
         setCurrentUser(null);
-        setUserName(""); // Clear the username on logout
+        setUserName("");
+        setUserEmail("");
     };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
-                setCurrentUser(user);
-                // Fetch and set the username if the user is already logged in
                 const userDoc = await getDoc(doc(firestore, 'users', user.uid));
                 if (userDoc.exists()) {
                     setUserName(userDoc.data().username);
+                    setUserEmail(userDoc.data().email);
                 }
+                setCurrentUser(user);
             } else {
                 setCurrentUser(null);
                 setUserName("");
+                setUserEmail("");
             }
+            setLoading(false); // Auth state has been resolved
         });
 
         return unsubscribe;
@@ -80,7 +71,8 @@ export const AuthProvider = ({ children }) => {
 
     const value = {
         currentUser,
-        userName,  // Expose the username to the rest of the app
+        userName,
+        userEmail,
         isAuthenticated: !!currentUser,
         signup,
         login,
@@ -89,11 +81,10 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={value}>
-            {children}
+            {!loading && children} {/* Render children only when not loading */}
         </AuthContext.Provider>
     );
 };
-
 
 
 
