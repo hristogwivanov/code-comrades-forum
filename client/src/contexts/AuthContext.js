@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, firestore } from '../firebase';
 import { createUserWithEmailAndPassword, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, setDoc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, updateDoc, collection, query, where, getDocs  } from 'firebase/firestore';
 
 const AuthContext = createContext();
 
@@ -10,21 +10,42 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
 
-    const signup = async (email, password) => {
-        console.log("inside the signup function");
-        console.log(email);
-        console.log(password);
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        // After successful signup, you can add additional user info to Firestore
-        await setDoc(doc(firestore, 'users', userCredential.user.uid), {
-            email: email,
-            // Add other user info here if needed
-        });
-        return userCredential;
+    const signup = async (email, password, username) => {
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            await setDoc(doc(firestore, 'users', userCredential.user.uid), {
+                email: email,
+                username: username  // Store the username in Firestore
+            });
+            return userCredential;
+        } catch (error) {
+            console.error("Error during signup:", error.message, error.code, error);
+            throw error;
+        }
     };
 
-    const login = (email, password) => {
-        return signInWithEmailAndPassword(auth, email, password);
+    const login = async (username, password) => {
+        try {
+            // Look up the user document by username
+            const usersRef = collection(firestore, 'users');
+            const q = query(usersRef, where('username', '==', username));
+            const querySnapshot = await getDocs(q);
+    
+            if (querySnapshot.empty) {
+                throw new Error('No user found with this username');
+            }
+    
+            // Assuming username is unique, there should be only one user
+            const userDoc = querySnapshot.docs[0];
+            const email = userDoc.data().email;
+    
+            // Now authenticate with the email
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            return userCredential;
+        } catch (error) {
+            console.error("Error during login:", error.message, error.code, error);
+            throw error;
+        }
     };
 
     const logout = () => {

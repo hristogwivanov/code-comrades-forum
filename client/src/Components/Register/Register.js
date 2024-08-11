@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, Link } from 'react-router-dom'; // Added Link import
+import { useNavigate, Link } from 'react-router-dom';
 
 function Register() {
     const emailRef = useRef();
@@ -19,17 +19,16 @@ function Register() {
             return setError("Passwords do not match");
         }
 
+        if (passwordRef.current.value.length < 6) {
+            return setError("Password should be at least 6 characters");
+        }
+
         try {
             setError('');
             setLoading(true);
-            console.log("loading");
-            console.log(emailRef.current.value);
-            console.log(passwordRef.current.value);
-            await signup(emailRef.current.value, passwordRef.current.value);
-            console.log(">>>after sign up")
-            // Assuming signup also accepts username
+            await signup(emailRef.current.value, passwordRef.current.value, usernameRef.current.value);
             navigate('/');
-        } catch {
+        } catch (error) {
             setError('Failed to create an account');
         }
 
@@ -40,7 +39,7 @@ function Register() {
         <section id="register-page" className="content auth">
             <div className="container">
                 <h2>Register</h2>
-                {error && <p>{error}</p>}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <form id="register" onSubmit={handleSubmit}>
                     <div className='inputDiv'>
                         <input
@@ -89,7 +88,7 @@ function Register() {
                     </div>
                     <p className="field">
                         <span>
-                            If you already have profile click <Link to="/login">here</Link>
+                            If you already have a profile, click <Link to="/login">here</Link>
                         </span>
                     </p>
                 </form>
@@ -99,6 +98,7 @@ function Register() {
 }
 
 export default Register;
+
 
 
 
