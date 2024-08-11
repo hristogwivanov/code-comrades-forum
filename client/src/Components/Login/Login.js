@@ -11,12 +11,21 @@ const LoginFormKeys = {
 export const Login = () => {
     const { login } = useAuth();  // Get the login function from AuthContext
     const navigate = useNavigate();
+    const [error, setError] = useState('');
     const { values, changeHandler, onSubmit } = useForm(
         {
             [LoginFormKeys.Username]: "",  // Use username instead of email
             [LoginFormKeys.Password]: "",
         },
-        (formValues) => login(formValues.username, formValues.password)  // Pass the login function to useForm
+        async (formValues) => {
+            try {
+                setError('');
+                await login(formValues.username, formValues.password);
+                navigate('/forum');  // Redirect to Forum page after successful login
+            } catch (err) {
+                setError('Failed to log in. Please check your username and password.');
+            }
+        }
     );
 
     return (
