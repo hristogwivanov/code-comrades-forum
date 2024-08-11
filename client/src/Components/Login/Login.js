@@ -1,4 +1,5 @@
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { useForm } from "../../hooks/useForm";
 
@@ -9,6 +10,7 @@ const LoginFormKeys = {
 
 export const Login = () => {
     const { login } = useAuth();  // Get the login function from AuthContext
+    const navigate = useNavigate();
     const { values, changeHandler, onSubmit } = useForm(
         {
             [LoginFormKeys.Username]: "",  // Use username instead of email
