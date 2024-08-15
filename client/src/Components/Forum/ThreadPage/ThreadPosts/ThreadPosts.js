@@ -38,7 +38,7 @@ export const ThreadPosts = () => {
             `Are you sure you want to delete ${post.postTitle}`
         );
         if (result) {
-            await forumService.delete(post._id);
+            await forumService.remove(post._id);
             deleteThread(post._id);
             navigate(`/forum`);
         }
