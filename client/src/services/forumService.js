@@ -18,7 +18,7 @@ export const forumServiceFactory = () => {
         try {
             const querySnapshot = await getDocs(postsCollectionRef);
             const posts = querySnapshot.docs.map(doc => ({
-                id: doc.id,
+                _id: doc.id,
                 ...doc.data(),
             }));
             return posts;

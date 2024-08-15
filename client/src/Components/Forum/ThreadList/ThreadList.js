@@ -1,7 +1,5 @@
 import styles from "./ThreadList.module.css";
-
 import { useForumContext } from "../../../contexts/ForumContext";
-
 import { ThreadListItem } from "./ThreadListItem/ThreadListItem";
 
 export const ThreadList = () => {
@@ -15,8 +13,6 @@ export const ThreadList = () => {
                             <th>Title/Author</th>
                         </tr>
                     </thead>
-                    {/* <th>Statistics</th>
-                <th>Last</th> */}
                     <tbody>
                         {posts.map((x) => (
                             <tr key={x._id}>
@@ -27,7 +23,6 @@ export const ThreadList = () => {
                 </table>
             </div>
             <br />
-
             {posts.length === 0 && (
                 <div className="postcontainer">
                     <h2>No posts yet!</h2>

@@ -1,18 +1,16 @@
 import { Link } from "react-router-dom";
 import styles from "./ThreadListItem.module.css";
 
-export const ThreadListItem = ({ ...x}) => {
+export const ThreadListItem = ({ _id, postTitle, userName }) => {
     return (
-        <td className={styles["Item"]}>
-            <Link to={x._id}>
-                <div className={styles["Link"]}>
-                <strong>
-                    {x.postTitle}
+        <>
+            <td className={styles["Item"]}>
+                <Link to={`/thread/${_id}`} className={styles["Link"]}>
+                    <strong>{postTitle}</strong>
                     <br />
-                </strong>
-                published by <strong>{x.userName}</strong>
-                </div>
-            </Link>
-        </td>
+                    published by <strong>{userName}</strong>
+                </Link>
+            </td>
+        </>
     );
 };
