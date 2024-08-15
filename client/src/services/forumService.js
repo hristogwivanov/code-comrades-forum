@@ -7,7 +7,7 @@ export const forumServiceFactory = () => {
     const create = async (data) => {
         try {
             const docRef = await addDoc(postsCollectionRef, data);
-            return { id: docRef.id, ...data };
+            return { _id: docRef.id, ...data };
         } catch (error) {
             console.error('Error creating post:', error);
             throw error;
@@ -30,20 +30,19 @@ export const forumServiceFactory = () => {
 
     const getOne = async (id) => {
         try {
-            const docRef = doc(firestore, 'posts', id); // Create a reference to the specific document
-            const docSnap = await getDoc(docRef); // Fetch the document by ID
-            
+            const docRef = doc(firestore, 'posts', id);
+            const docSnap = await getDoc(docRef);
+
             if (docSnap.exists()) {
-                return { _id: docSnap.id, ...docSnap.data() }; // Return the document data along with its ID
+                return { _id: docSnap.id, ...docSnap.data() };
             } else {
-                throw new Error('No such document!');
+                return null;  // Return null if the document does not exist
             }
         } catch (error) {
             console.error('Error getting post:', error);
             throw error;
         }
     };
-
 
     const update = async (id, data) => {
         try {

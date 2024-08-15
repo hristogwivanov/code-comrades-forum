@@ -27,8 +27,8 @@ export const ForumProvider = ({ children }) => {
     
         try {
             const newPost = await forumService.create(data);
-            setPosts(state => [...state, newPost]);
-            navigate('/forum');
+            setPosts(state => [...state, newPost]); // Update the state immediately
+            navigate(`/forum/${newPost._id}`); // Navigate to the newly created post
         } catch (error) {
             console.error('Error submitting post:', error);
         }
@@ -37,7 +37,7 @@ export const ForumProvider = ({ children }) => {
     const deleteThread = async (threadId) => {
         try {
             await forumService.remove(threadId);
-            setPosts(state => state.filter(post => post.id !== threadId));
+            setPosts(state => state.filter(post => post._id !== threadId));
         } catch (error) {
             console.error('Error deleting post:', error);
         }
