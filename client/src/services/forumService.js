@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { firestore } from '../firebase';
 
 export const forumServiceFactory = () => {
@@ -28,6 +28,23 @@ export const forumServiceFactory = () => {
         }
     };
 
+    const getOne = async (id) => {
+        try {
+            const docRef = doc(firestore, 'posts', id); // Create a reference to the specific document
+            const docSnap = await getDoc(docRef); // Fetch the document by ID
+            
+            if (docSnap.exists()) {
+                return { _id: docSnap.id, ...docSnap.data() }; // Return the document data along with its ID
+            } else {
+                throw new Error('No such document!');
+            }
+        } catch (error) {
+            console.error('Error getting post:', error);
+            throw error;
+        }
+    };
+
+
     const update = async (id, data) => {
         try {
             const postRef = doc(firestore, 'posts', id);
@@ -52,6 +69,7 @@ export const forumServiceFactory = () => {
     return {
         create,
         getAll,
+        getOne,
         update,
         remove,
     };
