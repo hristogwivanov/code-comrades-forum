@@ -1,10 +1,8 @@
-import { useContext } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useMemo } from 'react';
 
 export const useService = (serviceFactory) => {
-    const { token } = useAuth();
-
-    const service = serviceFactory(token);
+    // Memoize the service so it doesn't get recreated unnecessarily
+    const service = useMemo(() => serviceFactory(), [serviceFactory]);
 
     return service;
 };

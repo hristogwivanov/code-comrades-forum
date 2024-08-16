@@ -1,9 +1,15 @@
+import { useEffect } from "react";
 import styles from "./ThreadList.module.css";
 import { useForumContext } from "../../../contexts/ForumContext";
 import { ThreadListItem } from "./ThreadListItem/ThreadListItem";
 
-export const ThreadList = () => {
-    const { posts } = useForumContext();
+export const ThreadList = ({ refreshTrigger }) => {
+    const { posts, getAllPosts } = useForumContext();
+
+    useEffect(() => {
+        getAllPosts(); // Fetch all posts when the component mounts or refreshTrigger changes
+    }, [refreshTrigger, getAllPosts]);
+
     return (
         <section id="thread-list">
             <div className="container">

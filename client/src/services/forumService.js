@@ -46,8 +46,8 @@ export const forumServiceFactory = () => {
 
     const update = async (id, data) => {
         try {
-            const postRef = doc(firestore, 'posts', id);
-            await updateDoc(postRef, data);
+            const docRef = doc(firestore, 'posts', id);
+            await updateDoc(docRef, data);
             return { id, ...data };
         } catch (error) {
             console.error('Error updating post:', error);

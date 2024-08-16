@@ -9,14 +9,17 @@ export const ForumProvider = ({ children }) => {
     const [posts, setPosts] = useState([]);
     const forumService = forumServiceFactory();
 
+    const getAllPosts = async () => {
+        try {
+            const result = await forumService.getAll();
+            setPosts(result);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+        }
+    };
+
     useEffect(() => {
-        forumService.getAll()
-            .then(result => {
-                setPosts(result);
-            })
-            .catch(error => {
-                console.error('Error fetching posts:', error);
-            });
+        getAllPosts();
     }, []);
 
     const onPostSubmit = async (data) => {
@@ -45,6 +48,7 @@ export const ForumProvider = ({ children }) => {
 
     const contextValues = {
         posts,
+        getAllPosts, // Expose getAllPosts function to context
         onPostSubmit,
         deleteThread,
     };
