@@ -1,45 +1,54 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { useForm } from "../../hooks/useForm";
+import React, { useRef, useState, useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
 
-const LoginFormKeys = {
-    Username: "username",
-    Password: "password",
-};
-
-export const Login = () => {
-    const { login } = useAuth();  // Get the login function from AuthContext
-    const navigate = useNavigate();
+function Login() {
+    const usernameRef = useRef();
+    const passwordRef = useRef();
+    const { login, authError, clearAuthError } = useAuth();  // Get the login function, authError, and clearAuthError from AuthContext
     const [error, setError] = useState('');
-    const { values, changeHandler, onSubmit } = useForm(
-        {
-            [LoginFormKeys.Username]: "",  // Use username instead of email
-            [LoginFormKeys.Password]: "",
-        },
-        async (formValues) => {
-            try {
-                setError('');
-                await login(formValues.username, formValues.password);
-                navigate('/forum');  // Redirect to Forum page after successful login
-            } catch (err) {
-                setError('Failed to log in. Please check your username and password.');
-            }
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    // Clear any errors when the component mounts
+    useEffect(() => {
+        clearAuthError();  // Ensure no previous error is displayed on initial load
+    }, [clearAuthError]);
+
+    // Set error message when authError changes
+    useEffect(() => {
+        if (authError) {
+            setError(authError);
         }
-    );
+    }, [authError]);
+
+    async function handleSubmit(e) {
+        e.preventDefault();
+
+        try {
+            setError('');  // Clear any previous errors
+            setLoading(true);
+            await login(usernameRef.current.value, passwordRef.current.value);
+            navigate('/forum');  // Redirect to Forum page after successful login
+        } catch (error) {
+            setError(authError || 'Failed to log in. Please check your username and password.');
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <section id="login-page" className="auth">
             <div className="container">
-                <form id="login" method="POST" onSubmit={onSubmit}>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <form id="login" method="POST" onSubmit={handleSubmit}>
                     <div className="inputDiv">
                         <input
                             type="text"
                             id="username"
+                            name="username"
                             placeholder="Username"
-                            name={LoginFormKeys.Username}
-                            value={values[LoginFormKeys.Username]}
-                            onChange={changeHandler}
+                            ref={usernameRef}
                             required
                         />
                     </div>
@@ -47,19 +56,16 @@ export const Login = () => {
                         <input
                             type="password"
                             id="login-password"
-                            name={LoginFormKeys.Password}
-                            value={values[LoginFormKeys.Password]}
-                            onChange={changeHandler}
+                            name="password"
                             placeholder="Password"
+                            ref={passwordRef}
                             required
                         />
                     </div>
                     <div className="inputDiv">
-                        <input
-                            type="submit"
-                            className="btn submit"
-                            value="Login"
-                        />
+                        <button disabled={loading} type="submit" className="btn submit">
+                            Login
+                        </button>
                     </div>
                     <p className="field">
                         <span>
@@ -70,4 +76,6 @@ export const Login = () => {
             </div>
         </section>
     );
-};
+}
+
+export default Login;

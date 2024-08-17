@@ -4,7 +4,7 @@ import { auth, firestore } from "./firebase";
 import { Header } from "./Components/Header/Header";
 import { Footer } from "./Components/Footer/Footer";
 import { Home } from "./Components/Home/Home";
-import { Login } from "./Components/Login/Login";
+import Login from "./Components/Login/Login";
 import Register from "./Components/Register/Register";
 import { Logout } from "./Components/Logout/Logout";
 import Forum from "./Components/Forum/Forum";

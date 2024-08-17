@@ -5,19 +5,19 @@ export const postReducer = (state, action) => {
                 ...state,
                 ...action.payload,
             };
-        case 'COMMENT_ADD':
+        case "COMMENT_ADD":
             return {
                 ...state,
                 comments: [
                     ...state.comments,
                     {
-                         ...action.payload,
+                        ...action.payload,
                         author: {
                             email: action.userEmail,
-                        }
-                    }
+                        },
+                    },
                 ],
-            }
+            };
         default:
             return state;
     }

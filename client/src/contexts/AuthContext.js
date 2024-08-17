@@ -11,36 +11,105 @@ export const AuthProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [userName, setUserName] = useState("");
     const [userEmail, setUserEmail] = useState("");
-    const [loading, setLoading] = useState(true); // Added loading state
+    const [loading, setLoading] = useState(true);
+    const [authError, setAuthError] = useState(null);
+    const clearAuthError = () => {
+        setAuthError(null);
+    };
+    
 
     const signup = async (email, password, username) => {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        await setDoc(doc(firestore, 'users', userCredential.user.uid), {
-            email: email,
-            username: username,
-        });
-        setCurrentUser(userCredential.user);
-        setUserName(username);
-        setUserEmail(email);
+        try {
+            setAuthError(null); // Clear previous errors
+    
+            // Check if the username already exists
+            const usersRef = collection(firestore, 'users');
+            const usernameQuery = query(usersRef, where('username', '==', username));
+            const usernameSnapshot = await getDocs(usernameQuery);
+    
+            if (!usernameSnapshot.empty) {
+                setAuthError('Username already exists');
+                throw new Error('auth/username-already-exists');
+            }
+    
+            // Create user with email and password
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    
+            // Save additional user info in Firestore
+            await setDoc(doc(firestore, 'users', userCredential.user.uid), {
+                email: email,
+                username: username,
+            });
+    
+            setCurrentUser(userCredential.user);
+            setUserName(username);
+            setUserEmail(email);
+        } catch (error) {
+            if (error.code === 'auth/email-already-in-use') {
+                setAuthError('Email already in use');
+            } else if (error.message === 'auth/username-already-exists') {
+                setAuthError('Username already exists');
+            } else {
+                setAuthError('Failed to create an account');
+            }
+            throw error; // Re-throw to allow the component to handle it
+        }
     };
+    
 
     const login = async (username, password) => {
-        const usersRef = collection(firestore, 'users');
-        const q = query(usersRef, where('username', '==', username));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-            throw new Error('No user found with this username');
+        try {
+            clearAuthError(); // Clear any existing errors before login attempt
+            const usersRef = collection(firestore, 'users');
+            const q = query(usersRef, where('username', '==', username));
+            const querySnapshot = await getDocs(q);
+    
+            if (querySnapshot.empty) {
+                setAuthError('No user found with this username');
+                throw new Error('auth/user-not-found');
+            }
+    
+            const userDoc = querySnapshot.docs[0];
+            
+            const email = userDoc.data().email;
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                setCurrentUser(userCredential.user);
+                setUserName(username);
+                setUserEmail(email);
+            } catch (authError) {
+                let errorMessage;
+                switch (authError.code) {
+                    case 'auth/invalid-credential':
+                        errorMessage = 'Incorrect password. Please try again.';
+                        break;
+                    case 'auth/user-not-found':
+                        errorMessage = 'No account found with this username.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'The email address is not valid.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Too many failed login attempts. Please try again later.';
+                        break;
+                    case 'auth/network-request-failed':
+                        errorMessage = 'Network error. Please check your connection and try again.';
+                        break;
+                    default:
+                        errorMessage = 'An unexpected error occurred. Please try again.';
+                }
+                setAuthError(errorMessage);
+                throw new Error(authError.code);
+            }
+        } catch (error) {
+            throw error; // Re-throw the error to be caught by the component
         }
-
-        const userDoc = querySnapshot.docs[0];
-        const email = userDoc.data().email;
-        const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-        setCurrentUser(userCredential.user);
-        setUserName(username);
-        setUserEmail(email);
     };
+    
+    
+    
+    
+    
 
     const logout = async () => {
         await signOut(auth);
@@ -63,7 +132,7 @@ export const AuthProvider = ({ children }) => {
                 setUserName("");
                 setUserEmail("");
             }
-            setLoading(false); // Auth state has been resolved
+            setLoading(false);
         });
 
         return unsubscribe;
@@ -77,179 +146,13 @@ export const AuthProvider = ({ children }) => {
         signup,
         login,
         logout,
+        authError,
+        clearAuthError, // Expose clearAuthError in context
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children} {/* Render children only when not loading */}
+            {!loading && children}
         </AuthContext.Provider>
     );
 };
-
-
-
-// import React, { createContext, useContext, useEffect, useState } from 'react';
-// import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
-// import { auth } from './firebase'; // assuming your firebase configuration is in firebase.js
-
-// const AuthContext = createContext();
-
-// export function useAuth() {
-//     return useContext(AuthContext);
-// }
-
-// export function AuthProvider({ children }) {
-//     const [currentUser, setCurrentUser] = useState(null);
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//         const unsubscribe = onAuthStateChanged(auth, user => {
-//             setCurrentUser(user);
-//             setLoading(false);
-//         });
-
-//         return unsubscribe;
-//     }, []);
-
-//     function signup(email, password) {
-//         return createUserWithEmailAndPassword(auth, email, password);
-//     }
-
-//     function login(email, password) {
-//         return signInWithEmailAndPassword(auth, email, password);
-//     }
-
-//     function logout() {
-//         return signOut(auth);
-//     }
-
-//     const value = {
-//         currentUser,
-//         signup,
-//         login,
-//         logout,
-//     };
-
-//     return (
-//         <AuthContext.Provider value={value}>
-//             {!loading && children}
-//         </AuthContext.Provider>
-//     );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { createContext, useContext } from "react";
-// import { useNavigate } from "react-router-dom";
-
-// import { AuthServiceFactory } from "../services/authService";
-// import { userServiceFactory } from "../services/userService";
-
-// import { useLocalStorage } from "../hooks/useLocalStorage";
-
-// export const AuthContext = createContext();
-
-// export const AuthProvider = ({ children }) => {
-//     const [auth, setAuth] = useLocalStorage("auth", {});
-//     const navigate = useNavigate();
-
-//     const authService = AuthServiceFactory(auth.accessToken);
-//     const userService = userServiceFactory();
-
-//     const onLoginSubmit = async (data) => {
-//         try {
-//             const result = await authService.login(data);
-
-//             setAuth(result);
-
-//             navigate("/forum");
-//         } catch (error) {
-//             console.log("There is a problem");
-//         }
-//     };
-
-//     const onRegisterSubmit = async (values) => {
-//         const { confirmPassword, ...registerData } = values;
-
-//         if (confirmPassword !== registerData.password) {
-//             return;
-//         }
-
-//         try {
-//             const result = await authService.register(registerData);
-//             setAuth(result);
-//             //console.log(result)
-
-//             const { password, ...publicUserData } = registerData;
-//             //console.log('publicUserData:');
-//             // console.log(publicUserData);
-//             publicUserData.description = "";
-//             publicUserData.profilePic =
-//                 "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png";
-
-//             const userPublicDataResult = await userService.create(
-//                 publicUserData
-//             );
-//             //console.log('publicUserDataResult:');
-//             //console.log(userPublicDataResult);
-
-//             navigate("/forum");
-//         } catch (error) {
-//             console.log("There is a problem in registration");
-//         }
-//     };
-
-//     const onLogout = async () => {
-//         await authService.logout();
-
-//         setAuth({});
-//     };
-
-//     const contextValues = {
-//         onLoginSubmit,
-//         onRegisterSubmit,
-//         onLogout,
-//         userId: auth._id,
-//         token: auth.accessToken,
-//         userName: auth.username,
-//         userEmail: auth.email,
-//         userProfilePic: auth.profilePic,
-//         isAuthenticated: !!auth.accessToken,
-//     };
-
-//     return (
-//         <>
-//             <AuthContext.Provider value={contextValues}>
-//                 {children}
-//             </AuthContext.Provider>
-//         </>
-//     );
-// };
-
-// export const useAuthContext = () => {
-//     const context = useContext(AuthContext);
-
-//     return context;
-// };
