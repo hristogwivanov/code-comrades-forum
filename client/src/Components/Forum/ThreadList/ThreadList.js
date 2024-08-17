@@ -16,7 +16,7 @@ export const ThreadList = ({ refreshTrigger }) => {
                 <table className={styles["Table"]}>
                     <thead>
                         <tr>
-                            <th>Title/Author</th>
+                            <th><center>Discussion Board</center></th>
                         </tr>
                     </thead>
                     <tbody>

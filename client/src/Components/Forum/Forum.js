@@ -20,7 +20,7 @@ export const Forum = () => {
         async (data) => {
             if (data.userEmail) {
                 await onPostSubmit(data);
-                setRefreshThreads(prev => !prev); // Toggle the refresh trigger
+                setRefreshThreads(prev => !prev); 
             } else {
                 console.error("User email is undefined. Cannot submit post.");
             }
