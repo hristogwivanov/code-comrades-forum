@@ -4,6 +4,7 @@ import styles from "./Header.module.css";
 
 export const Header = () => {
     const { isAuthenticated, userName } = useAuth();
+    const { currentUser } = useAuth();
     return (
         <header>
             {/* <!-- Navigation --> */}
@@ -23,7 +24,11 @@ export const Header = () => {
                                 Hi, {userName}
                             </span>
                             <Link to="/forum">Forum</Link>
-                            <Link to="/profile">Profile</Link>
+                            {currentUser && (
+                <Link to={`/Profile/${currentUser.uid}`}>
+                    Profile
+                </Link>
+            )}
                             <Link to="/settings">Settings</Link>
                             <Link to="/logout">Logout</Link>
                         </div>

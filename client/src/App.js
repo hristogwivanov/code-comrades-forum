@@ -10,6 +10,7 @@ import { Logout } from "./Components/Logout/Logout";
 import Forum from "./Components/Forum/Forum";
 import { ThreadPage } from "./Components/Forum/ThreadPage/ThreadPage";
 import { Settings } from "./Components/Settings/Settings";
+import { Profile } from "./Components/Profile/Profile";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { ForumProvider } from "./contexts/ForumContext";
@@ -37,6 +38,10 @@ function App() {
                                 <Route
                                     path="/forum/:postId"
                                     element={<ThreadPage />}
+                                />
+                                <Route
+                                    path="/Profile/:userId"
+                                    element={<Profile />}
                                 />
                                 <Route
                                     path="/settings"

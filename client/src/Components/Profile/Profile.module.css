@@ -1,0 +1,81 @@
+#profile-page {
+  border-radius: 6px;
+  position: relative;
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  background: #161618;
+}
+
+.Table {
+  font-family: monospace;
+  font-size: 1.5rem;
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 8px;
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.Table td,
+.Table thead {
+  /* border: 1px solid #ddd; */
+  padding: 8px;
+  width: 100%;
+}
+
+.Table tr {
+  border-bottom-left-radius: 10px;
+  border-top-right-radius: 10px;
+  border: 2px solid red;
+}
+
+.Table tr td{
+  background-color: #f2f2f2;
+}
+
+.Table thead tr td {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #62626c;
+  color: white;
+}
+
+.Table textarea,
+.Table input {
+  font-size: 20px;
+  width: 60%;
+  border: 3px solid #161618;
+  margin-bottom: 6px;
+}
+
+.Table textarea {
+  margin-bottom: 0;
+}
+
+.Table a {
+  font-weight: normal;
+}
+
+.Table span {
+  font-size: 24px;
+}
+
+.Table button {
+  width: 220px;
+}
+
+.userinfo {
+  float: left;
+}
+
+.userinfo img {
+  height: 200px;
+  width: 200px;
+  margin-right: 10px;
+}

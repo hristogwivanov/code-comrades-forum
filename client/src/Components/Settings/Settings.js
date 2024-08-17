@@ -6,37 +6,36 @@ import { firestore } from "../../firebase";
 import styles from "./Settings.module.css";
 
 export const Settings = () => {
-    const { currentUser, userName, userEmail } = useAuth(); // Directly access these values
+    const { currentUser } = useAuth(); // Directly access currentUser from useAuth
     const [userInfo, setUserInfo] = useState(null);
     const [newProfilePic, setNewProfilePic] = useState("");
+    const [newDescription, setNewDescription] = useState(""); // State for the new description
+
+    const fetchUserInfo = async () => {
+        if (!currentUser) {
+            console.error("No current user. Cannot fetch user info.");
+            return;
+        }
+
+        const userId = currentUser.uid;
+
+        try {
+            const userDocRef = doc(firestore, "users", userId);
+            const userDoc = await getDoc(userDocRef);
+
+            if (userDoc.exists()) {
+                setUserInfo(userDoc.data());
+                setNewProfilePic(userDoc.data().profilePic || "");
+                setNewDescription(userDoc.data().description || ""); // Set description state
+            } else {
+                console.error("No such user document!");
+            }
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    };
 
     useEffect(() => {
-        const fetchUserInfo = async () => {
-            if (!currentUser) {
-                console.error("No current user. Cannot fetch user info.");
-                return;
-            }
-
-            const userId = currentUser.uid;
-
-            console.log("Fetching user info for userId:", userId);
-
-            try {
-                const userDocRef = doc(firestore, "users", userId);
-                const userDoc = await getDoc(userDocRef);
-
-                if (userDoc.exists()) {
-                    console.log("User data found:", userDoc.data());
-                    setUserInfo(userDoc.data());
-                    setNewProfilePic(userDoc.data().profilePic || "");
-                } else {
-                    console.error("No such user document!");
-                }
-            } catch (error) {
-                console.error("Error fetching user info:", error);
-            }
-        };
-
         if (currentUser) {
             fetchUserInfo();
         }
@@ -58,13 +57,17 @@ export const Settings = () => {
             const userDocRef = doc(firestore, "users", userId);
             await updateDoc(userDocRef, { profilePic: newProfilePic });
             alert("Profile picture updated successfully!");
+            await fetchUserInfo(); // Refetch user info to rerender the page with updated data
         } catch (error) {
             console.error("Error updating profile picture:", error);
         }
     };
 
-    const handleDescriptionChange = async (event) => {
-        const newDescription = event.target.value;
+    const handleDescriptionChange = (event) => {
+        setNewDescription(event.target.value);
+    };
+
+    const handleDescriptionSubmit = async () => {
         if (!currentUser) {
             console.error("No current user. Cannot update description.");
             return;
@@ -76,6 +79,7 @@ export const Settings = () => {
             const userDocRef = doc(firestore, "users", userId);
             await updateDoc(userDocRef, { description: newDescription });
             alert("Description updated successfully!");
+            await fetchUserInfo(); // Refetch user info to rerender the page with updated data
         } catch (error) {
             console.error("Error updating description:", error);
         }
@@ -85,7 +89,7 @@ export const Settings = () => {
         return <div>Loading user information...</div>;
     }
 
-    const { username, description, profilePic } = userInfo;
+    const { username, profilePic } = userInfo;
 
     return (
         <section id={styles["settings-page"]}>
@@ -94,7 +98,7 @@ export const Settings = () => {
                     <thead>
                         <tr>
                             <td>
-                                <strong>Settings</strong>
+                                <center><strong>Settings</strong></center>
                             </td>
                         </tr>
                     </thead>
@@ -107,14 +111,17 @@ export const Settings = () => {
                                     </strong>
                                     <br />
                                     <img
-                                        src={profilePic}
+                                        src={
+                                            profilePic ||
+                                            "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+                                        }
                                         alt="userpic"
-                                    ></img>
+                                    />
                                     <br />
                                 </div>
                                 <input
                                     name="newProfilePic"
-                                    defaultValue={profilePic}
+                                    value={newProfilePic}
                                     onChange={handleProfilePicChange}
                                 />
                                 <br />
@@ -122,9 +129,16 @@ export const Settings = () => {
                                     Change Avatar
                                 </button>
                                 <br />
-                                <textarea defaultValue={description} />
+                                <textarea
+                                    name="newDescription"
+                                    value={newDescription}
+                                    onChange={handleDescriptionChange}
+                                    placeholder="Update your about info"
+                                />
                                 <br />
-                                <button>Change About Info</button>
+                                <button onClick={handleDescriptionSubmit}>
+                                    Change About Info
+                                </button>
                             </td>
                         </tr>
                     </tbody>
