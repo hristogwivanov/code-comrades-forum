@@ -1,8 +1,9 @@
-import { collection, addDoc, getDocs, getDoc, doc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
 import { firestore } from '../firebase';
 
 export const forumServiceFactory = () => {
     const postsCollectionRef = collection(firestore, 'posts');
+    const repliesCollectionRef = collection(firestore, 'replies'); // Assuming you have a 'replies' collection
 
     const create = async (data) => {
         try {
@@ -36,10 +37,35 @@ export const forumServiceFactory = () => {
             if (docSnap.exists()) {
                 return { _id: docSnap.id, ...docSnap.data() };
             } else {
-                return null;  // Return null if the document does not exist
+                return null;
             }
         } catch (error) {
             console.error('Error getting post:', error);
+            throw error;
+        }
+    };
+
+    const getReplies = async (postId) => {
+        try {
+            const q = query(repliesCollectionRef, where("postId", "==", postId));
+            const querySnapshot = await getDocs(q);
+            const replies = querySnapshot.docs.map(doc => ({
+                _id: doc.id,
+                ...doc.data(),
+            }));
+            return replies;
+        } catch (error) {
+            console.error('Error getting replies:', error);
+            throw error;
+        }
+    };
+
+    const createReply = async (data) => {
+        try {
+            const docRef = await addDoc(repliesCollectionRef, data);
+            return { _id: docRef.id, ...data };  // Ensure that _id is assigned correctly
+        } catch (error) {
+            console.error('Error creating reply:', error);
             throw error;
         }
     };
@@ -69,6 +95,8 @@ export const forumServiceFactory = () => {
         create,
         getAll,
         getOne,
+        getReplies,
+        createReply,
         update,
         remove,
     };

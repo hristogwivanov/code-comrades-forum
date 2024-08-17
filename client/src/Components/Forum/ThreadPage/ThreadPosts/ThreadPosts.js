@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMemo } from "react";
 
@@ -21,54 +21,72 @@ export const ThreadPosts = () => {
 
     const forumService = useService(forumServiceFactory);
     const navigate = useNavigate();
-    const { deleteThread } = useForumContext();
+    const { deleteThread, getRepliesForPost, replies } = useForumContext();
 
+    // Fetch post data on component mount
     useEffect(() => {
-        let isMounted = true; // To prevent setting state if component unmounts during fetch
-        console.log("render 1");
-        
-        forumService.getOne(postId).then((postData) => {
-            if (postData && isMounted) {
-                dispatch({ type: "POST_FETCH", payload: postData });
-                
-                // Only set editData if it's the first time the post data is fetched
-                setEditData(prevData => {
-                    // Avoid unnecessary setState call if the data hasn't changed
-                    if (prevData.postTitle !== postData.postTitle || prevData.postBody !== postData.postBody) {
-                        return { postTitle: postData.postTitle, postBody: postData.postBody };
-                    }
-                    return prevData;
-                });
+        let isMounted = true;
+
+        const fetchPostData = async () => {
+            try {
+                const postData = await forumService.getOne(postId);
+                if (postData && isMounted) {
+                    dispatch({ type: "POST_FETCH", payload: postData });
+                    setEditData({
+                        postTitle: postData.postTitle,
+                        postBody: postData.postBody,
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching post data:", error);
             }
-        });
+        };
 
-        return () => { isMounted = false }; // Cleanup if component unmounts
-    }, [forumService, postId]);
+        fetchPostData();
 
+        return () => {
+            isMounted = false;
+        };
+    }, [postId, forumService]);
+
+    // Fetch replies for the current post
     useEffect(() => {
-        console.log("render 2");
-        if (!isEditing) {
-            setEditData({ postTitle: post.postTitle, postBody: post.postBody });
-        }
-    }, [post, isEditing]);
+        let isMounted = true;
+
+        const fetchReplies = async () => {
+            try {
+                if (isMounted) {
+                    await getRepliesForPost(postId);
+                }
+            } catch (error) {
+                console.error("Error fetching replies:", error);
+            }
+        };
+
+        fetchReplies();
+
+        return () => {
+            isMounted = false;
+        };
+    }, [postId, getRepliesForPost]);
 
     const isOwner = post.userName === userName;
 
-    const onDeleteClick = async () => {
+    const onDeleteClick = useCallback(async () => {
         const result = window.confirm(
             `Are you sure you want to delete ${post.postTitle}`
         );
         if (result) {
-            deleteThread(post._id);
+            await deleteThread(post._id);
             navigate(`/forum`);
         }
-    };
+    }, [post, deleteThread, navigate]);
 
-    const onEditClick = () => {
+    const onEditClick = useCallback(() => {
         setIsEditing(true);
-    };
+    }, []);
 
-    const onSaveClick = async () => {
+    const onSaveClick = useCallback(async () => {
         const updatedPost = {
             ...post,
             postTitle: editData.postTitle,
@@ -77,12 +95,12 @@ export const ThreadPosts = () => {
         await forumService.update(postId, updatedPost);
         dispatch({ type: "POST_FETCH", payload: updatedPost });
         setIsEditing(false);
-    };
+    }, [editData, forumService, post, postId]);
 
-    const onCancelClick = () => {
+    const onCancelClick = useCallback(() => {
         setIsEditing(false);
         setEditData({ postTitle: post.postTitle, postBody: post.postBody });
-    };
+    }, [post]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -91,8 +109,6 @@ export const ThreadPosts = () => {
             [name]: value,
         }));
     };
-
-    console.log("Rendered with editData:", editData);  // Debugging log
 
     return (
         <div className="container">
@@ -156,6 +172,28 @@ export const ThreadPosts = () => {
                             </div>
                         </td>
                     </tr>
+
+                    {/* Display Replies */}
+                    {replies.length > 0 &&
+    replies
+        .filter((reply) => reply.postId === postId)
+        .sort((a, b) => a.createdAt - b.createdAt) // Sort replies by timestamp
+        .map((reply) => (
+            <tr key={reply._id}>
+                <td className={styles["userinfo"]}>
+                    <strong>{reply.userName}</strong>
+                    <br />
+                    <img
+                        src="https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+                        alt="userpic"
+                    ></img>
+                    <br />
+                </td>
+                <td className={styles["post-cell"]}>
+                    <div>{reply.replyBody}</div>
+                </td>
+            </tr>
+        ))}
                 </tbody>
             </table>
             <br />

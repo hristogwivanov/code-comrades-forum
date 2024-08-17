@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { forumServiceFactory } from '../services/forumService';
+import { serverTimestamp } from "firebase/firestore";
 
 export const ForumContext = createContext();
 
 export const ForumProvider = ({ children }) => {
     const navigate = useNavigate();
     const [posts, setPosts] = useState([]);
+    const [replies, setReplies] = useState([]);
     const forumService = forumServiceFactory();
 
     const getAllPosts = async () => {
@@ -18,9 +20,14 @@ export const ForumProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        getAllPosts();
-    }, []);
+    const getRepliesForPost = async (postId) => {
+        try {
+            const result = await forumService.getReplies(postId);
+            setReplies(result);
+        } catch (error) {
+            console.error('Error fetching replies:', error);
+        }
+    };
 
     const onPostSubmit = async (data) => {
         if (!data.userEmail) {
@@ -30,10 +37,41 @@ export const ForumProvider = ({ children }) => {
     
         try {
             const newPost = await forumService.create(data);
-            setPosts(state => [...state, newPost]); // Update the state immediately
-            navigate(`/forum/${newPost._id}`); // Navigate to the newly created post
+            setPosts(state => [...state, newPost]);
+            navigate(`/forum/${newPost._id}`);
         } catch (error) {
             console.error('Error submitting post:', error);
+        }
+    };
+
+    const onReplySubmit = async (data) => {
+        const { postId, userName, postBody } = data;
+    
+        if (!userName || !postBody || !postId) {
+            console.error('Cannot submit reply without a valid user name, body, and postId.');
+            return;
+        }
+    
+        try {
+            // Create the new reply using the forumService, including a timestamp
+            const newReply = await forumService.createReply({
+                postId,
+                userName,
+                replyBody: postBody,
+                createdAt: serverTimestamp(), // Add the timestamp here
+            });
+    
+            // Update the state with the new reply, ensuring no duplicates
+            setReplies((state) => {
+                // Ensure the new reply is added only if it doesn't already exist
+                const existingReply = state.find((reply) => reply._id === newReply._id);
+                if (!existingReply) {
+                    return [...state, newReply].sort((a, b) => b.createdAt - a.createdAt); // Sort replies by timestamp
+                }
+                return state;
+            });
+        } catch (error) {
+            console.error('Error submitting reply:', error);
         }
     };
 
@@ -48,8 +86,11 @@ export const ForumProvider = ({ children }) => {
 
     const contextValues = {
         posts,
-        getAllPosts, // Expose getAllPosts function to context
+        replies,
+        getAllPosts,
+        getRepliesForPost,
         onPostSubmit,
+        onReplySubmit,
         deleteThread,
     };
 
@@ -59,6 +100,7 @@ export const ForumProvider = ({ children }) => {
         </ForumContext.Provider>
     );
 };
+
 
 export const useForumContext = () => {
     const context = useContext(ForumContext);

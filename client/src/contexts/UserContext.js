@@ -23,37 +23,21 @@ export const UserProvider = ({ children }) => {
 
         const result = await userService.edit(userId, data);
 
-        // setUserSettings(state => state.map(x => x._id === values._id ? result : x))
         if (src) {
             navigate("/Settings");
         }
     };
 
-    // const onGameEditSubmit = async (values) => {
-    //     const result = await forumService.edit(values._id, values);
 
-    //     setGames(state => state.map(x => x._id === values._id ? result : x))
-
-    //     navigate(`/catalog/${values._id}`);
-    // };
-
-    // const deleteGame = (gameId) => {
-    //     setGames(state => state.filter(game => game._id !== gameId))
-    // };
 
     const getUser = (userId) => {
         return users.find((user) => user._id === userId);
     };
 
     const contextValues = {
-        //userSettings,
-        //onUserSettingsChange,
         users,
         getUser,
         changeProfilePic,
-        //onPostSubmit,
-        // deleteGame,
-        // onGameEditSubmit,
     };
 
     return (
