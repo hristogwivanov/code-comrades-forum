@@ -1,6 +1,5 @@
 import { useEffect, useReducer, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
 
 import { useService } from "../../../../hooks/useService";
 import { postReducer } from "../../../../reducers/postReducer";
@@ -15,15 +14,16 @@ export const ThreadPosts = () => {
     const [post, dispatch] = useReducer(postReducer, {});
     const [isEditing, setIsEditing] = useState(false);
     const [editData, setEditData] = useState({ postTitle: "", postBody: "" });
+    const [userProfilePics, setUserProfilePics] = useState({});
+    const [userNames, setUserNames] = useState({});
 
     const { postId } = useParams();
-    const { userName } = useAuth();
+    const { currentUser } = useAuth(); // Get currentUser from useAuth
 
     const forumService = useService(forumServiceFactory);
     const navigate = useNavigate();
     const { deleteThread, getRepliesForPost, replies } = useForumContext();
 
-    // Fetch post data on component mount
     useEffect(() => {
         let isMounted = true;
 
@@ -36,6 +36,22 @@ export const ThreadPosts = () => {
                         postTitle: postData.postTitle,
                         postBody: postData.postBody,
                     });
+
+                    if (!userNames[postData.userId]) {
+                        const userInfo = await forumService.getUserInfo(
+                            postData.userId
+                        );
+                        if (userInfo) {
+                            setUserProfilePics((prev) => ({
+                                ...prev,
+                                [postData.userId]: userInfo.profilePic,
+                            }));
+                            setUserNames((prev) => ({
+                                ...prev,
+                                [postData.userId]: userInfo.username,
+                            }));
+                        }
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching post data:", error);
@@ -47,9 +63,8 @@ export const ThreadPosts = () => {
         return () => {
             isMounted = false;
         };
-    }, [postId, forumService]);
+    }, [postId, forumService, userNames]);
 
-    // Fetch replies for the current post
     useEffect(() => {
         let isMounted = true;
 
@@ -57,6 +72,24 @@ export const ThreadPosts = () => {
             try {
                 if (isMounted) {
                     await getRepliesForPost(postId);
+
+                    for (const reply of replies) {
+                        if (!userNames[reply.userId]) {
+                            const userInfo = await forumService.getUserInfo(
+                                reply.userId
+                            );
+                            if (userInfo) {
+                                setUserProfilePics((prev) => ({
+                                    ...prev,
+                                    [reply.userId]: userInfo.profilePic,
+                                }));
+                                setUserNames((prev) => ({
+                                    ...prev,
+                                    [reply.userId]: userInfo.username,
+                                }));
+                            }
+                        }
+                    }
                 }
             } catch (error) {
                 console.error("Error fetching replies:", error);
@@ -68,9 +101,9 @@ export const ThreadPosts = () => {
         return () => {
             isMounted = false;
         };
-    }, [postId, getRepliesForPost]);
+    }, [postId, getRepliesForPost, replies, forumService, userNames]);
 
-    const isOwner = post.userName === userName;
+    const isOwner = post.userId === currentUser?.uid;
 
     const onDeleteClick = useCallback(async () => {
         const result = window.confirm(
@@ -133,13 +166,35 @@ export const ThreadPosts = () => {
                 <tbody>
                     <tr>
                         <td className={styles["userinfo"]}>
-                            <strong>{post.userName}</strong>
+                            <strong>
+                                {userNames[post.userId] || "Unknown User"}
+                            </strong>
                             <br />
                             <img
-                                src="https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+                                src={
+                                    userProfilePics[post.userId] ||
+                                    "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+                                }
                                 alt="userpic"
-                            ></img>
+                            />
                             <br />
+                            <small>
+                                {new Date(
+                                    post.createdAt?.seconds * 1000
+                                ).toLocaleDateString("en-GB", {
+                                    day: "2-digit",
+                                    month: "long",
+                                    year: "numeric",
+                                })}
+                                <br />
+                                {new Date(
+                                    post.createdAt?.seconds * 1000
+                                ).toLocaleTimeString("en-GB", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                    hour12: false,
+                                })}
+                            </small>
                         </td>
                         <td className={styles["post-cell"]}>
                             <div>
@@ -160,8 +215,12 @@ export const ThreadPosts = () => {
                                 )}
                                 {isOwner && isEditing && (
                                     <>
-                                        <button onClick={onSaveClick}>Save</button>
-                                        <button onClick={onCancelClick}>Cancel</button>
+                                        <button onClick={onSaveClick}>
+                                            Save
+                                        </button>
+                                        <button onClick={onCancelClick}>
+                                            Cancel
+                                        </button>
                                     </>
                                 )}
                                 {isOwner && (
@@ -173,27 +232,49 @@ export const ThreadPosts = () => {
                         </td>
                     </tr>
 
-                    {/* Display Replies */}
                     {replies.length > 0 &&
-    replies
-        .filter((reply) => reply.postId === postId)
-        .sort((a, b) => a.createdAt - b.createdAt) // Sort replies by timestamp
-        .map((reply) => (
-            <tr key={reply._id}>
-                <td className={styles["userinfo"]}>
-                    <strong>{reply.userName}</strong>
-                    <br />
-                    <img
-                        src="https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
-                        alt="userpic"
-                    ></img>
-                    <br />
-                </td>
-                <td className={styles["post-cell"]}>
-                    <div>{reply.replyBody}</div>
-                </td>
-            </tr>
-        ))}
+                        replies
+                            .filter((reply) => reply.postId === postId)
+                            .sort((a, b) => a.createdAt - b.createdAt)
+                            .map((reply, index) => (
+                                <tr key={`${reply._id}-${index}`}>
+                                    <td className={styles["userinfo"]}>
+                                        <strong>
+                                            {userNames[reply.userId] ||
+                                                "Unknown User"}
+                                        </strong>
+                                        <br />
+                                        <img
+                                            src={
+                                                userProfilePics[reply.userId] ||
+                                                "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
+                                            }
+                                            alt="userpic"
+                                        />
+                                        <br />
+                                        <small>
+                                            {new Date(
+                                                reply.createdAt?.seconds * 1000
+                                            ).toLocaleDateString("en-GB", {
+                                                day: "2-digit",
+                                                month: "long",
+                                                year: "numeric",
+                                            })}
+                                            <br />
+                                            {new Date(
+                                                reply.createdAt?.seconds * 1000
+                                            ).toLocaleTimeString("en-GB", {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: false,
+                                            })}
+                                        </small>
+                                    </td>
+                                    <td className={styles["post-cell"]}>
+                                        <div>{reply.postBody}</div>
+                                    </td>
+                                </tr>
+                            ))}
                 </tbody>
             </table>
             <br />

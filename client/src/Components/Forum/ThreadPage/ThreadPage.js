@@ -1,21 +1,20 @@
 import { useForumContext } from '../../../contexts/ForumContext';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useForm } from '../../../hooks/useForm';
-import { useParams } from 'react-router-dom'; // Import useParams to get the postId
+import { useParams } from 'react-router-dom';
 
 import { ThreadPosts } from './ThreadPosts/ThreadPosts';
 
 export const ThreadPage = () => {
-    const { onReplySubmit } = useForumContext();
-    const { userName, isAuthenticated } = useAuth();
-    const { postId } = useParams(); // Get the postId from the URL
+    const { onReplySubmit, onPostSubmit } = useForumContext();
+    const { currentUser, isAuthenticated } = useAuth();
+    const { postId } = useParams();
 
     const { values, changeHandler, onSubmit } = useForm({
         postBody: '',
-        userName,
     }, (data) => {
         if (data.postBody.trim()) {
-            onReplySubmit({ ...data, postId }); // Include postId when submitting a reply
+            onReplySubmit({ ...data, postId });
         }
     });
 

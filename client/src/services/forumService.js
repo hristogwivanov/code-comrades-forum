@@ -1,13 +1,16 @@
-import { collection, addDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, getDoc, doc, deleteDoc, updateDoc, query, where, serverTimestamp } from 'firebase/firestore';
 import { firestore } from '../firebase';
 
 export const forumServiceFactory = () => {
     const postsCollectionRef = collection(firestore, 'posts');
-    const repliesCollectionRef = collection(firestore, 'replies'); // Assuming you have a 'replies' collection
+    const repliesCollectionRef = collection(firestore, 'replies');
 
     const create = async (data) => {
         try {
-            const docRef = await addDoc(postsCollectionRef, data);
+            const docRef = await addDoc(postsCollectionRef, {
+                ...data,
+                createdAt: serverTimestamp(), // Add timestamp
+            });
             return { _id: docRef.id, ...data };
         } catch (error) {
             console.error('Error creating post:', error);
@@ -62,8 +65,11 @@ export const forumServiceFactory = () => {
 
     const createReply = async (data) => {
         try {
-            const docRef = await addDoc(repliesCollectionRef, data);
-            return { _id: docRef.id, ...data };  // Ensure that _id is assigned correctly
+            const docRef = await addDoc(repliesCollectionRef, {
+                ...data,
+                createdAt: serverTimestamp(), // Add timestamp
+            });
+            return { _id: docRef.id, ...data };
         } catch (error) {
             console.error('Error creating reply:', error);
             throw error;
@@ -91,6 +97,21 @@ export const forumServiceFactory = () => {
         }
     };
 
+    const getUserInfo = async (userId) => {
+        try {
+            const docRef = doc(firestore, 'users', userId);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                return docSnap.data();
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error('Error fetching user info:', error);
+            throw error;
+        }
+    };
+
     return {
         create,
         getAll,
@@ -99,5 +120,6 @@ export const forumServiceFactory = () => {
         createReply,
         update,
         remove,
+        getUserInfo,
     };
 };

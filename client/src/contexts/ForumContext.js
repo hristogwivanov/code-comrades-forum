@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { forumServiceFactory } from '../services/forumService';
-import { serverTimestamp } from "firebase/firestore";
+import { useAuth } from '../contexts/AuthContext'; // Import useAuth
 
 export const ForumContext = createContext();
 
@@ -10,6 +10,7 @@ export const ForumProvider = ({ children }) => {
     const [posts, setPosts] = useState([]);
     const [replies, setReplies] = useState([]);
     const forumService = forumServiceFactory();
+    const { currentUser } = useAuth(); // Get currentUser from useAuth
 
     const getAllPosts = async () => {
         try {
@@ -20,23 +21,24 @@ export const ForumProvider = ({ children }) => {
         }
     };
 
-    const getRepliesForPost = async (postId) => {
-        try {
-            const result = await forumService.getReplies(postId);
-            setReplies(result);
-        } catch (error) {
-            console.error('Error fetching replies:', error);
-        }
-    };
+    useEffect(() => {
+        getAllPosts();
+    }, []);
 
     const onPostSubmit = async (data) => {
-        if (!data.userEmail) {
-            console.error('Cannot submit post without a valid user email.');
+        if (!currentUser) {
+            console.error('User must be logged in to submit a post.');
             return;
         }
-    
+
+        const postData = {
+            ...data,
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+        };
+
         try {
-            const newPost = await forumService.create(data);
+            const newPost = await forumService.create(postData);
             setPosts(state => [...state, newPost]);
             navigate(`/forum/${newPost._id}`);
         } catch (error) {
@@ -45,31 +47,20 @@ export const ForumProvider = ({ children }) => {
     };
 
     const onReplySubmit = async (data) => {
-        const { postId, userName, postBody } = data;
-    
-        if (!userName || !postBody || !postId) {
-            console.error('Cannot submit reply without a valid user name, body, and postId.');
+        if (!currentUser) {
+            console.error('User must be logged in to submit a reply.');
             return;
         }
-    
+
+        const replyData = {
+            ...data,
+            userId: currentUser.uid,
+            userEmail: currentUser.email,
+        };
+
         try {
-            // Create the new reply using the forumService, including a timestamp
-            const newReply = await forumService.createReply({
-                postId,
-                userName,
-                replyBody: postBody,
-                createdAt: serverTimestamp(), // Add the timestamp here
-            });
-    
-            // Update the state with the new reply, ensuring no duplicates
-            setReplies((state) => {
-                // Ensure the new reply is added only if it doesn't already exist
-                const existingReply = state.find((reply) => reply._id === newReply._id);
-                if (!existingReply) {
-                    return [...state, newReply].sort((a, b) => b.createdAt - a.createdAt); // Sort replies by timestamp
-                }
-                return state;
-            });
+            const newReply = await forumService.createReply(replyData);
+            setReplies(state => [...state, newReply]);
         } catch (error) {
             console.error('Error submitting reply:', error);
         }
@@ -84,14 +75,23 @@ export const ForumProvider = ({ children }) => {
         }
     };
 
+    const getRepliesForPost = async (postId) => {
+        try {
+            const result = await forumService.getReplies(postId);
+            setReplies(result);
+        } catch (error) {
+            console.error('Error fetching replies:', error);
+        }
+    };
+
     const contextValues = {
         posts,
-        replies,
         getAllPosts,
-        getRepliesForPost,
         onPostSubmit,
-        onReplySubmit,
         deleteThread,
+        getRepliesForPost,
+        replies,
+        onReplySubmit,
     };
 
     return (
@@ -100,7 +100,6 @@ export const ForumProvider = ({ children }) => {
         </ForumContext.Provider>
     );
 };
-
 
 export const useForumContext = () => {
     const context = useContext(ForumContext);
