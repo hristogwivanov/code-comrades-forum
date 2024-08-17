@@ -9,6 +9,7 @@ import { useAuth } from "../../../../contexts/AuthContext";
 import { useForumContext } from "../../../../contexts/ForumContext";
 
 import styles from "./ThreadPosts.module.css";
+import { Replies } from "./Replies/Replies";
 
 export const ThreadPosts = () => {
     const [post, dispatch] = useReducer(postReducer, {});
@@ -22,7 +23,7 @@ export const ThreadPosts = () => {
 
     const forumService = useService(forumServiceFactory);
     const navigate = useNavigate();
-    const { deleteThread, getRepliesForPost, replies } = useForumContext();
+    const { deleteThread, getRepliesForPost, replies, updateReply, deleteReply } = useForumContext(); // Add updateReply and deleteReply from context
 
     useEffect(() => {
         let isMounted = true;
@@ -143,6 +144,27 @@ export const ThreadPosts = () => {
         }));
     };
 
+    const handleUpdateReply = async (replyId, updatedData) => {
+        try {
+            await updateReply(replyId, updatedData);
+        } catch (error) {
+            console.error("Error updating reply:", error);
+        }
+    };
+
+    const handleDeleteReply = async (replyId) => {
+        const result = window.confirm(
+            `Are you sure you want to delete this reply?`
+        );
+        if (result) {
+            try {
+                await deleteReply(replyId);
+            } catch (error) {
+                console.error("Error deleting reply:", error);
+            }
+        }
+    };
+
     return (
         <div className="container">
             <table className={styles["Table"]}>
@@ -232,49 +254,15 @@ export const ThreadPosts = () => {
                         </td>
                     </tr>
 
-                    {replies.length > 0 &&
-                        replies
-                            .filter((reply) => reply.postId === postId)
-                            .sort((a, b) => a.createdAt - b.createdAt)
-                            .map((reply, index) => (
-                                <tr key={`${reply._id}-${index}`}>
-                                    <td className={styles["userinfo"]}>
-                                        <strong>
-                                            {userNames[reply.userId] ||
-                                                "Unknown User"}
-                                        </strong>
-                                        <br />
-                                        <img
-                                            src={
-                                                userProfilePics[reply.userId] ||
-                                                "https://eitrawmaterials.eu/wp-content/uploads/2016/09/person-icon.png"
-                                            }
-                                            alt="userpic"
-                                        />
-                                        <br />
-                                        <small>
-                                            {new Date(
-                                                reply.createdAt?.seconds * 1000
-                                            ).toLocaleDateString("en-GB", {
-                                                day: "2-digit",
-                                                month: "long",
-                                                year: "numeric",
-                                            })}
-                                            <br />
-                                            {new Date(
-                                                reply.createdAt?.seconds * 1000
-                                            ).toLocaleTimeString("en-GB", {
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                                hour12: false,
-                                            })}
-                                        </small>
-                                    </td>
-                                    <td className={styles["post-cell"]}>
-                                        <div>{reply.postBody}</div>
-                                    </td>
-                                </tr>
-                            ))}
+                    <Replies
+                        replies={replies}
+                        postId={postId}
+                        userProfilePics={userProfilePics}
+                        userNames={userNames}
+                        currentUser={currentUser}
+                        onUpdateReply={handleUpdateReply}
+                        onDeleteReply={handleDeleteReply}
+                    />
                 </tbody>
             </table>
             <br />

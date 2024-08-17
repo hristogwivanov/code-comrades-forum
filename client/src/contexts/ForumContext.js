@@ -46,6 +46,25 @@ export const ForumProvider = ({ children }) => {
         }
     };
 
+    const updateReply = async (replyId, updatedData) => {
+        try {
+            await forumService.updateReply(replyId, updatedData);
+            // Update state if needed
+        } catch (error) {
+            console.error('Error updating reply:', error);
+        }
+    };
+    
+    const deleteReply = async (replyId) => {
+        try {
+            await forumService.deleteReply(replyId);
+            // Update state to remove the deleted reply
+            setReplies((prevReplies) => prevReplies.filter(reply => reply._id !== replyId));
+        } catch (error) {
+            console.error('Error deleting reply:', error);
+        }
+    };
+    
     const onReplySubmit = async (data) => {
         if (!currentUser) {
             console.error('User must be logged in to submit a reply.');
@@ -90,6 +109,8 @@ export const ForumProvider = ({ children }) => {
         onPostSubmit,
         deleteThread,
         getRepliesForPost,
+        updateReply,
+        deleteReply,
         replies,
         onReplySubmit,
     };

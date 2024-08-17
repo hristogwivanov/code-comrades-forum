@@ -76,6 +76,26 @@ export const forumServiceFactory = () => {
         }
     };
 
+    const updateReply = async (replyId, updatedData) => {
+        try {
+            const docRef = doc(firestore, 'replies', replyId);
+            await updateDoc(docRef, updatedData);
+        } catch (error) {
+            console.error('Error updating reply:', error);
+            throw error;
+        }
+    };
+    
+    const deleteReply = async (replyId) => {
+        try {
+            const replyRef = doc(firestore, 'replies', replyId);
+            await deleteDoc(replyRef);
+        } catch (error) {
+            console.error('Error deleting reply:', error);
+            throw error;
+        }
+    };
+
     const update = async (id, data) => {
         try {
             const docRef = doc(firestore, 'posts', id);
@@ -118,6 +138,8 @@ export const forumServiceFactory = () => {
         getOne,
         getReplies,
         createReply,
+        updateReply,
+        deleteReply,
         update,
         remove,
         getUserInfo,
