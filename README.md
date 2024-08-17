@@ -1,4 +1,6 @@
 # Code Comrades Forum
+Code Comrades is currently deployed at: 
+https://code-comrades-forum.vercel.app/
 
 ### Project description: 
 Code comrades forum is a classic discussion forum, meant to be used within an organization. It is a place where the co-workers can discuss everything work or life-related. It is using JS react for frontend and SoftUni practice server for backend. 
