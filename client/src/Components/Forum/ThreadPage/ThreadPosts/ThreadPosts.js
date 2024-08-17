@@ -170,7 +170,7 @@ export const ThreadPosts = () => {
             <table className={styles["Table"]}>
                 <thead>
                     <tr>
-                        <th colSpan={2}>
+                        <th colSpan={2}><center>
                             {isEditing ? (
                                 <input
                                     type="text"
@@ -181,7 +181,7 @@ export const ThreadPosts = () => {
                                 />
                             ) : (
                                 post.postTitle
-                            )}
+                            )}</center>
                         </th>
                     </tr>
                 </thead>
