@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "../ThreadPosts.module.css";
 
 export const Replies = ({
@@ -41,9 +42,11 @@ export const Replies = ({
                     .map((reply, index) => (
                         <tr key={`${reply._id}-${index}`}>
                             <td className={styles["userinfo"]}>
-                                <strong>
-                                    {userNames[reply.userId] || "Unknown User"}
-                                </strong>
+                                <Link to={`/Profile/${reply.userId}`}>
+                                    <strong>
+                                        {userNames[reply.userId] || "Unknown User"}
+                                    </strong>
+                                </Link>
                                 <br />
                                 <img
                                     src={
