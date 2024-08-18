@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useEffect, useReducer, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -39,9 +40,7 @@ export const ThreadPosts = () => {
                     });
 
                     if (!userNames[postData.userId]) {
-                        const userInfo = await forumService.getUserInfo(
-                            postData.userId
-                        );
+                        const userInfo = await forumService.getUserInfo(postData.userId);
                         if (userInfo) {
                             setUserProfilePics((prev) => ({
                                 ...prev,
@@ -76,9 +75,7 @@ export const ThreadPosts = () => {
 
                     for (const reply of replies) {
                         if (!userNames[reply.userId]) {
-                            const userInfo = await forumService.getUserInfo(
-                                reply.userId
-                            );
+                            const userInfo = await forumService.getUserInfo(reply.userId);
                             if (userInfo) {
                                 setUserProfilePics((prev) => ({
                                     ...prev,
@@ -107,9 +104,7 @@ export const ThreadPosts = () => {
     const isOwner = post.userId === currentUser?.uid;
 
     const onDeleteClick = useCallback(async () => {
-        const result = window.confirm(
-            `Are you sure you want to delete ${post.postTitle}`
-        );
+        const result = window.confirm(`Are you sure you want to delete ${post.postTitle}`);
         if (result) {
             await deleteThread(post._id);
             navigate(`/forum`);
@@ -153,9 +148,7 @@ export const ThreadPosts = () => {
     };
 
     const handleDeleteReply = async (replyId) => {
-        const result = window.confirm(
-            `Are you sure you want to delete this reply?`
-        );
+        const result = window.confirm(`Are you sure you want to delete this reply?`);
         if (result) {
             try {
                 await deleteReply(replyId);
@@ -170,27 +163,31 @@ export const ThreadPosts = () => {
             <table className={styles["Table"]}>
                 <thead>
                     <tr>
-                        <th colSpan={2}><center>
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    name="postTitle"
-                                    value={editData.postTitle}
-                                    onChange={handleChange}
-                                    className={styles["edit-input"]}
-                                />
-                            ) : (
-                                post.postTitle
-                            )}</center>
+                        <th colSpan={2}>
+                            <center>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="postTitle"
+                                        value={editData.postTitle}
+                                        onChange={handleChange}
+                                        className={styles["edit-input"]}
+                                    />
+                                ) : (
+                                    post.postTitle
+                                )}
+                            </center>
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td className={styles["userinfo"]}>
-                            <strong>
-                                {userNames[post.userId] || "Unknown User"}
-                            </strong>
+                            <Link to={`/Profile/${post.userId}`}>
+                                <strong>
+                                    {userNames[post.userId] || "Unknown User"}
+                                </strong>
+                            </Link>
                             <br />
                             <img
                                 src={
@@ -201,17 +198,13 @@ export const ThreadPosts = () => {
                             />
                             <br />
                             <small>
-                                {new Date(
-                                    post.createdAt?.seconds * 1000
-                                ).toLocaleDateString("en-GB", {
+                                {new Date(post.createdAt?.seconds * 1000).toLocaleDateString("en-GB", {
                                     day: "2-digit",
                                     month: "long",
                                     year: "numeric",
                                 })}
                                 <br />
-                                {new Date(
-                                    post.createdAt?.seconds * 1000
-                                ).toLocaleTimeString("en-GB", {
+                                {new Date(post.createdAt?.seconds * 1000).toLocaleTimeString("en-GB", {
                                     hour: "2-digit",
                                     minute: "2-digit",
                                     hour12: false,
@@ -237,18 +230,12 @@ export const ThreadPosts = () => {
                                 )}
                                 {isOwner && isEditing && (
                                     <>
-                                        <button onClick={onSaveClick}>
-                                            Save
-                                        </button>
-                                        <button onClick={onCancelClick}>
-                                            Cancel
-                                        </button>
+                                        <button onClick={onSaveClick}>Save</button>
+                                        <button onClick={onCancelClick}>Cancel</button>
                                     </>
                                 )}
                                 {isOwner && (
-                                    <button onClick={onDeleteClick}>
-                                        Delete
-                                    </button>
+                                    <button onClick={onDeleteClick}>Delete</button>
                                 )}
                             </div>
                         </td>

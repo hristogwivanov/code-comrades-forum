@@ -10,6 +10,7 @@ import Forum from "./Components/Forum/Forum";
 import { ThreadPage } from "./Components/Forum/ThreadPage/ThreadPage";
 import { Settings } from "./Components/Settings/Settings";
 import { Profile } from "./Components/Profile/Profile";
+import { AboutUs } from "./Components/AboutUs/AboutUs";
 import { RouteGuard } from "./Components/RouteGuard/RouteGuard";
 
 import { AuthProvider } from "./contexts/AuthContext";
@@ -33,7 +34,7 @@ function App() {
                                 <Route path="/forum" element={<Forum />} />
                                 <Route path="/forum/:postId" element={<ThreadPage />} />
                                 <Route path="/Profile/:userId" element={<Profile />} />
-
+                                <Route path="/about" element={<AboutUs />} />
                                 {/* Protected routes under RouteGuard */}
                                 <Route element={<RouteGuard />}>
                                     <Route path="/logout" element={<Logout />} />

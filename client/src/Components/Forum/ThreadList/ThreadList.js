@@ -10,6 +10,13 @@ export const ThreadList = ({ refreshTrigger }) => {
         getAllPosts(); // Fetch all posts when the component mounts or refreshTrigger changes
     }, [refreshTrigger, getAllPosts]);
 
+    // Sort posts by time, newest on top, with a check for null or undefined createdAt
+    const sortedPosts = [...posts].sort((a, b) => {
+        const timeA = a.createdAt?.seconds || 0;
+        const timeB = b.createdAt?.seconds || 0;
+        return timeB - timeA;
+    });
+
     return (
         <section id="thread-list">
             <div className="container">
@@ -20,7 +27,7 @@ export const ThreadList = ({ refreshTrigger }) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {posts.map((x) => (
+                        {sortedPosts.map((x) => (
                             <tr key={x._id}>
                                 <ThreadListItem {...x} />
                             </tr>

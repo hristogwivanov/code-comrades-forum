@@ -13,3 +13,14 @@ td {
 .Item:hover {
   background-color: #ddd;
 }
+
+.ItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Time {
+  font-size: 0.97rem;
+  margin-left: auto;
+}
