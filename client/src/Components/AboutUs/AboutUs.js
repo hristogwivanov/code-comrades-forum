@@ -12,7 +12,7 @@ export const AboutUs = () => {
                     <thead>
                         <tr>
                             <td>
-                                <center><strong>About Us</strong></center>
+                                <center><strong>About Me</strong></center>
                             </td>
                         </tr>
                     </thead>
