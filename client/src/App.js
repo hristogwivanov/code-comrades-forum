@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import { auth, firestore } from "./firebase";
 
 import { Header } from "./Components/Header/Header";
 import { Footer } from "./Components/Footer/Footer";
@@ -11,6 +10,7 @@ import Forum from "./Components/Forum/Forum";
 import { ThreadPage } from "./Components/Forum/ThreadPage/ThreadPage";
 import { Settings } from "./Components/Settings/Settings";
 import { Profile } from "./Components/Profile/Profile";
+import { RouteGuard } from "./Components/RouteGuard/RouteGuard";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { ForumProvider } from "./contexts/ForumContext";
@@ -23,43 +23,24 @@ function App() {
                 <UserProvider>
                     <ForumProvider>
                         <Header />
-                        {/* <!-- Main Content --> */}
-
                         <main id="main-content">
                             <Routes>
                                 <Route path="/" element={<Home />} />
                                 <Route path="/login" element={<Login />} />
-                                <Route
-                                    path="/register"
-                                    element={<Register />}
-                                />
-                                <Route path="/logout" element={<Logout />} />
-                                <Route path="/forum" element={<Forum />} />
-                                <Route
-                                    path="/forum/:postId"
-                                    element={<ThreadPage />}
-                                />
-                                <Route
-                                    path="/Profile/:userId"
-                                    element={<Profile />}
-                                />
-                                <Route
-                                    path="/settings"
-                                    element={<Settings />}
-                                />
+                                <Route path="/register" element={<Register />} />
 
-                                {/*
-                    <Route element={<RouteGuard />}>
-                    <Route path='/catalog/:postId/edit' element={
-                        <PostOwner>
-                        <EditPost />
-                        </PostOwner>
-                    } />
-                    <Route path='/create-game' element={<CreateGame />} />
-                </Route> */}
+                                {/* Public routes */}
+                                <Route path="/forum" element={<Forum />} />
+                                <Route path="/forum/:postId" element={<ThreadPage />} />
+                                <Route path="/Profile/:userId" element={<Profile />} />
+
+                                {/* Protected routes under RouteGuard */}
+                                <Route element={<RouteGuard />}>
+                                    <Route path="/logout" element={<Logout />} />
+                                    <Route path="/settings" element={<Settings />} />
+                                </Route>
                             </Routes>
                         </main>
-
                         <Footer />
                     </ForumProvider>
                 </UserProvider>
